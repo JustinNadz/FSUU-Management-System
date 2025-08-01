@@ -27,6 +27,8 @@ Route::post('/logout', 'AuthController@logout')->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('/faculty-dashboard', 'DashboardController@facultyDashboard')->name('faculty.dashboard');
+    Route::get('/student-dashboard', 'DashboardController@studentDashboard')->name('student.dashboard');
     
     // Student Routes
     Route::resource('students', 'StudentController');
@@ -42,4 +44,19 @@ Route::middleware(['auth'])->group(function () {
     
     // Report Routes
     Route::resource('reports', 'ReportController');
+    
+    // System Settings Route
+    Route::get('/system-settings', function() {
+        return view('system-settings');
+    })->name('system.settings');
+    
+    // Academic Year API Routes
+    Route::prefix('api/academic-years')->group(function () {
+        Route::get('/', 'AcademicYearController@index');
+        Route::post('/', 'AcademicYearController@store');
+        Route::get('/{academicYear}', 'AcademicYearController@show');
+        Route::put('/{academicYear}', 'AcademicYearController@update');
+        Route::delete('/{academicYear}', 'AcademicYearController@destroy');
+        Route::post('/{academicYear}/set-current', 'AcademicYearController@setCurrent');
+    });
 });
