@@ -55,42 +55,100 @@
                     </div>
                     
                     <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                                <i class="fas fa-tachometer-alt me-2"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('students.*') ? 'active' : '' }}" href="{{ route('students.index') }}">
-                                <i class="fas fa-user-graduate me-2"></i>
-                                Students
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('faculty.*') ? 'active' : '' }}" href="{{ route('faculty.index') }}">
-                                <i class="fas fa-chalkboard-teacher me-2"></i>
-                                Faculty
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
-                                <i class="fas fa-book me-2"></i>
-                                Courses
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('departments.*') ? 'active' : '' }}" href="{{ route('departments.index') }}">
-                                <i class="fas fa-building me-2"></i>
-                                Departments
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" href="{{ route('reports.index') }}">
-                                <i class="fas fa-chart-bar me-2"></i>
-                                Reports
-                            </a>
-                        </li>
+                        @if(Auth::user()->role == 'admin')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('students.*') ? 'active' : '' }}" href="{{ route('students.index') }}">
+                                    <i class="fas fa-user-graduate me-2"></i>
+                                    Students
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('faculty.*') ? 'active' : '' }}" href="{{ route('faculty.index') }}">
+                                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                                    Faculty
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
+                                    <i class="fas fa-book me-2"></i>
+                                    Courses
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('departments.*') ? 'active' : '' }}" href="{{ route('departments.index') }}">
+                                    <i class="fas fa-building me-2"></i>
+                                    Departments
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" href="{{ route('reports.index') }}">
+                                    <i class="fas fa-chart-bar me-2"></i>
+                                    Reports
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('system.settings') ? 'active' : '' }}" href="{{ route('system.settings') }}">
+                                    <i class="fas fa-cog me-2"></i>
+                                    System Settings
+                                </a>
+                            </li>
+                        @elseif(Auth::user()->role == 'faculty')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('faculty.dashboard') ? 'active' : '' }}" href="{{ route('faculty.dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
+                                    <i class="fas fa-book me-2"></i>
+                                    My Courses
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('students.*') ? 'active' : '' }}" href="{{ route('students.index') }}">
+                                    <i class="fas fa-user-graduate me-2"></i>
+                                    Students
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('departments.*') ? 'active' : '' }}" href="{{ route('departments.index') }}">
+                                    <i class="fas fa-building me-2"></i>
+                                    Departments
+                                </a>
+                            </li>
+                        @elseif(Auth::user()->role == 'student')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('student.dashboard') ? 'active' : '' }}" href="{{ route('student.dashboard') }}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
+                                    <i class="fas fa-book me-2"></i>
+                                    Courses
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('faculty.*') ? 'active' : '' }}" href="{{ route('faculty.index') }}">
+                                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                                    Faculty
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('departments.*') ? 'active' : '' }}" href="{{ route('departments.index') }}">
+                                    <i class="fas fa-building me-2"></i>
+                                    Departments
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                     
                     <hr class="text-white-50">
@@ -114,6 +172,12 @@
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">@yield('page-title', 'Dashboard')</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="d-flex align-items-center me-3">
+                            <span class="badge bg-{{ Auth::user()->role == 'admin' ? 'primary' : (Auth::user()->role == 'faculty' ? 'success' : 'info') }} me-2">
+                                {{ ucfirst(Auth::user()->role) }}
+                            </span>
+                            <span class="text-muted">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</span>
+                        </div>
                         @yield('page-actions')
                     </div>
                 </div>

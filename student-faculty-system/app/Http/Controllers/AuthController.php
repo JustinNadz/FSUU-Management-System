@@ -27,7 +27,17 @@ class AuthController extends Controller
             
             $request->session()->regenerate();
             
-            return redirect()->intended('/dashboard');
+            // Redirect based on user role
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->intended('/dashboard');
+                case 'faculty':
+                    return redirect()->intended('/faculty-dashboard');
+                case 'student':
+                    return redirect()->intended('/student-dashboard');
+                default:
+                    return redirect()->intended('/dashboard');
+            }
         }
         
         return back()->withErrors([

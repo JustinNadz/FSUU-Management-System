@@ -9,7 +9,7 @@ class Department extends Model
     protected $primaryKey = 'department_id';
     
     protected $fillable = [
-        'department_name', 'department_code'
+        'department_name', 'department_code', 'department_head', 'description'
     ];
     
     public function faculty()
