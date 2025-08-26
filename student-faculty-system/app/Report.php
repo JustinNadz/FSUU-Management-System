@@ -9,7 +9,8 @@ class Report extends Model
     protected $primaryKey = 'report_id';
     
     protected $fillable = [
-        'title', 'report_type', 'category', 'created_by'
+        'title', 'report_type', 'category', 'description', 'parameters',
+        'created_by', 'status', 'schedule', 'is_public'
     ];
     
     public function createdBy()

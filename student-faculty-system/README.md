@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Student & Faculty Profile Management System
 
 A comprehensive web-based application designed to store, manage, and update personal and academic/professional profiles of students and faculty members within a school, college, or university.
@@ -187,3 +188,6 @@ This project is open-sourced software licensed under the [MIT license](https://o
 ## Support
 
 For support and questions, please contact the development team or create an issue in the repository.
+=======
+ywa ra
+>>>>>>> origin/main

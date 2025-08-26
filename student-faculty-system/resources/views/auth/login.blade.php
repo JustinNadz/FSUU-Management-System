@@ -69,11 +69,12 @@
                 @csrf
                 
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label">Username or Email</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                         <input type="text" class="form-control @error('username') is-invalid @enderror" 
-                               id="username" name="username" value="{{ old('username') }}" required>
+                               id="username" name="username" value="{{ old('username') }}" 
+                               placeholder="Enter username or email" required>
                     </div>
                     @error('username')
                         <div class="invalid-feedback d-block">{{ $message }}</div>

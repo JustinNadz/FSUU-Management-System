@@ -15,11 +15,14 @@ class CreateCoursesTable extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id('course_id');
-            $table->string('course_name');
-            $table->string('course_code')->unique();
+            $table->string('course_name', 100);
+            $table->string('course_code', 20)->unique();
+            $table->text('description')->nullable();
             $table->integer('credits');
             $table->unsignedBigInteger('department_id')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status', 20)->default('active'); // active/inactive
+            $table->integer('capacity')->nullable();
+            $table->text('prerequisites')->nullable();
             $table->timestamps();
             
             $table->foreign('department_id')->references('department_id')->on('departments');

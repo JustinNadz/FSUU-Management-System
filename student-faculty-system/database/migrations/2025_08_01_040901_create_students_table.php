@@ -16,19 +16,27 @@ class CreateStudentsTable extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id('student_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->text('address')->nullable();
+            $table->string('full_name');
+            $table->integer('birth_date')->nullable();
+            $table->string('address', 255)->nullable();
+            $table->string('city', 50)->nullable();
+            $table->string('state', 50)->nullable();
+            $table->string('zip_code', 20)->nullable();
+            $table->string('country', 50)->default('USA');
             $table->integer('age')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->string('major')->nullable();
+            $table->string('phone_number', 20)->nullable();
+            $table->string('major', 100)->nullable();
             $table->decimal('gpa', 3, 2)->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
-            $table->string('status')->nullable(); // active/inactive/graduated
+            $table->string('status', 20)->default('active'); // active/inactive/graduated/withdrawn
+            $table->date('enrollment_date')->nullable();
+            $table->date('expected_graduation_date')->nullable();
+            $table->unsignedBigInteger('advisor_id')->nullable();
             $table->timestamps();
             
             $table->foreign('user_id')->references('user_id')->on('users');
             $table->foreign('department_id')->references('department_id')->on('departments');
+            $table->foreign('advisor_id')->references('faculty_id')->on('faculty')->onDelete('set null');
             $table->unique('user_id');
         });
     }

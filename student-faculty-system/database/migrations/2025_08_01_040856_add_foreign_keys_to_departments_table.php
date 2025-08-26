@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDepartmentHeadAndDescriptionToDepartmentsTable extends Migration
+class AddForeignKeysToDepartmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddDepartmentHeadAndDescriptionToDepartmentsTable extends Migration
     public function up()
     {
         Schema::table('departments', function (Blueprint $table) {
-            $table->string('department_head')->nullable();
-            $table->text('description')->nullable();
+            $table->foreign('head_of_department')->references('faculty_id')->on('faculty')->onDelete('set null');
         });
     }
 
@@ -27,7 +26,7 @@ class AddDepartmentHeadAndDescriptionToDepartmentsTable extends Migration
     public function down()
     {
         Schema::table('departments', function (Blueprint $table) {
-            $table->dropColumn(['department_head', 'description']);
+            $table->dropForeign(['head_of_department']);
         });
     }
-}
+} 

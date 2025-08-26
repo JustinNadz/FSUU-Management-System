@@ -10,7 +10,8 @@ class Faculty extends Model
     protected $primaryKey = 'faculty_id';
     
     protected $fillable = [
-        'user_id', 'first_name', 'last_name', 'department_id', 'position'
+        'user_id', 'first_name', 'last_name', 'department_id', 'position',
+        'hire_date', 'office_location', 'office_hours'
     ];
     
     public function user()
@@ -26,5 +27,15 @@ class Faculty extends Model
     public function facultyCourses()
     {
         return $this->hasMany(FacultyCourse::class, 'faculty_id');
+    }
+
+    public function advisedStudents()
+    {
+        return $this->hasMany(Student::class, 'advisor_id');
+    }
+
+    public function departmentHead()
+    {
+        return $this->hasMany(Department::class, 'head_of_department');
     }
 }

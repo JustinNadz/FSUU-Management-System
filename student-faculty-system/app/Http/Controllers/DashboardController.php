@@ -59,26 +59,16 @@ class DashboardController extends Controller
         ));
     }
 
-    public function studentDashboard()
+    public function sectionOffering()
     {
         $user = Auth::user();
-        $student = Student::where('user_id', $user->user_id)->with(['department', 'studentCourses.course'])->first();
+        $student = Student::where('user_id', $user->user_id)->with(['department'])->first();
         
         if (!$student) {
             return redirect('/login')->withErrors(['error' => 'Student profile not found.']);
         }
 
-        $enrolledCourses = $student->studentCourses->count();
-        $totalCredits = $student->studentCourses->sum('course.credits');
-        $departmentStudents = Student::where('department_id', $student->department_id)->count();
-        $availableCourses = Course::where('department_id', $student->department_id)->count();
-
-        return view('student-dashboard', compact(
-            'student',
-            'enrolledCourses',
-            'totalCredits',
-            'departmentStudents',
-            'availableCourses'
-        ));
+        // Just pass the student object for basic info, no dashboard data needed
+        return view('section-offering', compact('student'));
     }
 }
