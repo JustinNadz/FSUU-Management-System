@@ -17,13 +17,17 @@ class CreateFacultyCoursesTable extends Migration
             $table->id('faculty_course_id');
             $table->unsignedBigInteger('faculty_id');
             $table->unsignedBigInteger('course_id');
-            $table->string('semester');
+            $table->string('semester', 20);
             $table->integer('year');
+            $table->string('section', 10)->nullable();
+            $table->string('classroom', 50)->nullable();
+            $table->string('schedule', 100)->nullable(); // Days and times
+            $table->integer('enrollment_count')->default(0);
             $table->timestamps();
             
             $table->foreign('faculty_id')->references('faculty_id')->on('faculty');
             $table->foreign('course_id')->references('course_id')->on('courses');
-            $table->unique(['faculty_id', 'course_id', 'semester', 'year']);
+            $table->unique(['faculty_id', 'course_id', 'semester', 'year', 'section'], 'faculty_courses_unique');
         });
     }
 

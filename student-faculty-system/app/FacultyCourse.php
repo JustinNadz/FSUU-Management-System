@@ -9,7 +9,8 @@ class FacultyCourse extends Model
     protected $primaryKey = 'faculty_course_id';
     
     protected $fillable = [
-        'faculty_id', 'course_id', 'semester', 'year'
+        'faculty_id', 'course_id', 'semester', 'year', 'section', 
+        'classroom', 'schedule', 'enrollment_count'
     ];
     
     public function faculty()

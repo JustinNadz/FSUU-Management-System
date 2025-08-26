@@ -9,7 +9,8 @@ class Course extends Model
     protected $primaryKey = 'course_id';
     
     protected $fillable = [
-        'course_name', 'course_code', 'credits', 'department_id', 'status'
+        'course_name', 'course_code', 'description', 'credits', 'department_id', 
+        'status', 'capacity', 'prerequisites'
     ];
     
     public function department()
@@ -25,5 +26,20 @@ class Course extends Model
     public function studentCourses()
     {
         return $this->hasMany(StudentCourse::class, 'course_id');
+    }
+
+    public function prerequisites()
+    {
+        return $this->hasMany(CoursePrerequisite::class, 'course_id');
+    }
+
+    public function requiredBy()
+    {
+        return $this->hasMany(CoursePrerequisite::class, 'requires_course_id');
+    }
+
+    public function academicCalendar()
+    {
+        return $this->hasMany(AcademicCalendar::class, 'course_id');
     }
 }

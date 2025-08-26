@@ -21,9 +21,25 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
         
+        // Try to authenticate with username or email
+        $loginField = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $credentials[$loginField] = $credentials['username'];
+        
+        // Debug: Log the credentials being used
+        \Log::info('Login attempt', [
+            'original_username' => $request->input('username'),
+            'login_field' => $loginField,
+            'final_credentials' => $credentials
+        ]);
+        
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $user->update(['last_login' => now()]);
+            
+            \Log::info('Login successful', [
+                'user_id' => $user->user_id,
+                'username' => $user->username,
+                'role' => $user->role
+            ]);
             
             $request->session()->regenerate();
             
@@ -34,11 +50,17 @@ class AuthController extends Controller
                 case 'faculty':
                     return redirect()->intended('/faculty-dashboard');
                 case 'student':
-                    return redirect()->intended('/student-dashboard');
+                    return redirect()->intended('/section-offering');
                 default:
                     return redirect()->intended('/dashboard');
             }
         }
+        
+        \Log::warning('Login failed', [
+            'credentials' => $credentials,
+            'login_field' => $loginField,
+            'user_exists' => isset($credentials[$loginField]) ? \App\User::where($loginField, $credentials[$loginField])->exists() : false
+        ]);
         
         return back()->withErrors([
             'username' => 'The provided credentials do not match our records.',

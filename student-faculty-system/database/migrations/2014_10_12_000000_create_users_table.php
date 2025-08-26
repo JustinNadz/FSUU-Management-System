@@ -15,11 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('user_id');
-            $table->string('username')->unique();
-            $table->string('password'); // Hashed password
-            $table->string('role'); // admin/faculty/student
-            $table->string('email')->unique();
+            $table->string('username', 50)->unique();
+            $table->string('password', 255); // Hashed password
+            $table->string('role', 20)->default('student'); // admin/faculty/student
+            $table->string('email', 100)->unique();
             $table->timestamp('last_login')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
