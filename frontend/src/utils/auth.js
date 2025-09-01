@@ -1,71 +1,39 @@
-const DEMO_CREDENTIALS = {
-  // Student Account
-  student: {
-    studentNumber: '23100000758',
-    password: '20031213',
-    role: 'student'
-  },
-  // Teacher Account
-  teacher: {
-    teacherId: 'T001',
-    password: 'teacher2024',
-    role: 'teacher'
-  },
-  // Admin Account
-  admin: {
-    adminId: 'admin',
-    password: 'admin123',
-    role: 'admin'
-  }
-}
+// Admin credentials are now provided via environment variables (Vite):
+//   VITE_ADMIN_ID
+//   VITE_ADMIN_PASSWORD
+// Create a .env file (or use real backend auth) instead of hardcoding demo credentials.
+
+const ADMIN_ID = (import.meta.env.VITE_ADMIN_ID || 'admin').trim()
+const ADMIN_PASSWORD = (import.meta.env.VITE_ADMIN_PASSWORD || 'admin123').trim()
+
+// Faculty demo credentials (Juan Dela Cruz - employee F-001)
+const FACULTY_EMP_NO = 'F-001'
+const FACULTY_PASSWORD = (import.meta.env.VITE_FACULTY_F001_PASSWORD || 'juan123').trim()
+
+// Student demo credentials (Anna Flores - student S-2025-001)
+const STUDENT_ID = 'S-2025-001'
+const STUDENT_PASSWORD = (import.meta.env.VITE_STUDENT_S2025_001_PASSWORD || 'anna123').trim()
 
 export function signIn(identifier, password) {
-  // Check if it's a student login
-  const isStudentValid =
-    String(identifier).trim() === DEMO_CREDENTIALS.student.studentNumber &&
-    String(password).trim() === DEMO_CREDENTIALS.student.password
+  const userId = String(identifier || '').trim()
+  const pass = String(password || '').trim()
 
-  // Check if it's a teacher login
-  const isTeacherValid =
-    String(identifier).trim() === DEMO_CREDENTIALS.teacher.teacherId &&
-    String(password).trim() === DEMO_CREDENTIALS.teacher.password
-
-  // Check if it's an admin login
-  const isAdminValid =
-    String(identifier).trim() === DEMO_CREDENTIALS.admin.adminId &&
-    String(password).trim() === DEMO_CREDENTIALS.admin.password
-
-  if (isStudentValid) {
-    const auth = {
-      studentNumber: DEMO_CREDENTIALS.student.studentNumber,
-      role: 'student',
-      name: 'MARIA LUNA SANTOS'
-    }
+  if (userId === ADMIN_ID && pass === ADMIN_PASSWORD) {
+    const auth = { userId: ADMIN_ID, role: 'admin', name: 'SYSTEM ADMINISTRATOR' }
     localStorage.setItem('auth', JSON.stringify(auth))
     return { ok: true, auth }
   }
-
-  if (isTeacherValid) {
-    const auth = {
-      teacherId: DEMO_CREDENTIALS.teacher.teacherId,
-      role: 'teacher',
-      name: 'JUNE BALDUEZA'
-    }
+  if (userId === FACULTY_EMP_NO && pass === FACULTY_PASSWORD) {
+    const auth = { userId: FACULTY_EMP_NO, role: 'faculty', name: 'Juan Dela Cruz' }
     localStorage.setItem('auth', JSON.stringify(auth))
     return { ok: true, auth }
   }
-
-  if (isAdminValid) {
-    const auth = {
-      adminId: DEMO_CREDENTIALS.admin.adminId,
-      role: 'admin',
-      name: 'SYSTEM ADMINISTRATOR'
-    }
+  if (userId === STUDENT_ID && pass === STUDENT_PASSWORD) {
+    const auth = { userId: STUDENT_ID, role: 'student', name: 'Anna Flores' }
     localStorage.setItem('auth', JSON.stringify(auth))
     return { ok: true, auth }
   }
-
-  return { ok: false }
+  return { ok: false, error: 'Invalid credentials' }
 }
 
 export function signOut() {
@@ -86,6 +54,10 @@ export function getUser() {
   } catch {
     return null
   }
+}
+
+export function getRole() {
+  return getUser()?.role || null
 }
 
 
