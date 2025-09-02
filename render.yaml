@@ -8,7 +8,7 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false
+        sync: false   # Set this in Render dashboard
       - key: APP_DEBUG
         value: false
       - key: APP_URL
@@ -16,12 +16,12 @@ services:
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
-        value: fsuu-management-mysql.render.com
+        value: fsuu-management-mysql.render.com   # Your Render MySQL host
       - key: DB_PORT
         value: 3306
       - key: DB_DATABASE
-        value: fsuu_management
+        value: fsuu_management                    # Your DB name
       - key: DB_USERNAME
-        value: fsuu_user
+        value: fsuu_user                          # Your DB user
       - key: DB_PASSWORD
-        value: fsuu_password123
+        value: fsuu_password123                   # Your DB password
