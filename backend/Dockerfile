@@ -1,7 +1,7 @@
 # Use official PHP 8.2 image with Apache
 FROM php:8.2-apache
 
-# Install system dependencies
+# Install system dependencies and PHP extensions (including PostgreSQL)
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
@@ -12,9 +12,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     libzip-dev \
     mariadb-client \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
-    && apt-get install -y libpq-dev \
-    && docker-php-ext-install pdo_pgsql pgsql
+    libpq-dev \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip pdo_pgsql pgsql
 
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
