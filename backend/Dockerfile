@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     libzip-dev \
     mariadb-client \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
+    && docker-php-ext-install pdo_pgsql pgsql
 
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
