@@ -1,20 +1,18 @@
 services:
   - type: web
     name: fsuu-management
-    env: php
+    env: docker
     rootDir: backend
-    buildCommand: |
-      composer install --no-dev --optimize-autoloader
-      php artisan config:cache
-      php artisan route:cache
-      php artisan view:cache
-    startCommand: "php artisan serve --host=0.0.0.0 --port=$PORT"
     plan: free
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false   # Generate this later and set in Render dashboard
+        sync: false
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://fsuu-management.onrender.com
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
