@@ -14,11 +14,8 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Enable Apache mod_rewrite for Laravel routing
+# Enable Apache mod_rewrite
 RUN a2enmod rewrite
-
-# Install Composer globally
-COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
@@ -26,14 +23,18 @@ WORKDIR /var/www/html
 # Copy Laravel app
 COPY . .
 
-# Install PHP dependencies
+# Install Composer globally
+COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions for storage and cache
+# Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 8000
-EXPOSE 8000
+# Expose Apache port
+EXPOSE 80
 
-# Start Laravel with artisan serve
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Point Apache to Laravel public folder
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
+
+# Start Apache in foreground
+CMD ["apache2-foreground"]
