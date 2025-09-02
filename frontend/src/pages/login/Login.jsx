@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Card, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { signIn } from '../../utils/auth'
+import { signIn, isAuthenticated, getUser } from '../../utils/auth'
 import { useLoading } from '../../components/LoadingProvider'
 
 export default function Login() {
@@ -37,17 +37,38 @@ export default function Login() {
   const onFinish = async ({ identifier, password }) => {
     setError('')
     show()
-    await new Promise(r => setTimeout(r, 800))
-    const res = signIn(identifier, password)
-    hide()
-    if (res.ok) {
-  if (res.auth.role === 'admin') navigate('/admin-dashboard')
-  else if (res.auth.role === 'faculty') navigate('/faculty-dashboard')
-  else if (res.auth.role === 'student') navigate('/student-dashboard')
-    } else {
-      setError(res.error || 'Invalid user ID or password')
+    try {
+      // Optional slight delay for UX consistency (can remove)
+      await new Promise(r => setTimeout(r, 200))
+      const res = await signIn(identifier.trim(), password)
+      console.log('Login response', res)
+      if (res.ok) {
+        const role = res.auth.role
+        console.log('Navigating based on role', role)
+        if (role === 'admin') navigate('/admin-dashboard')
+        else if (role === 'faculty') navigate('/faculty-dashboard')
+        else if (role === 'student') navigate('/student-dashboard')
+        else navigate('/')
+      } else {
+        console.log('Login failed front-end', res.error)
+        setError(res.error || 'Invalid user ID or password')
+      }
+    } catch (e) {
+      setError('Login error')
+    } finally {
+      hide()
     }
   }
+
+  // If already logged in (e.g., navigating directly to /login) redirect to role dashboard
+  useEffect(() => {
+    if (isAuthenticated()) {
+      const role = getUser()?.role
+      if (role === 'admin') navigate('/admin-dashboard', { replace: true })
+      else if (role === 'faculty') navigate('/faculty-dashboard', { replace: true })
+      else if (role === 'student') navigate('/student-dashboard', { replace: true })
+    }
+  }, [navigate])
 
   return (
     <div className="relative min-h-screen slideshow-container">

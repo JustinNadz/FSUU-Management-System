@@ -17,7 +17,8 @@ export default function Routes() {
       <ErrorBoundary>
         <ScrollToTop />
         <RouterRoutes>
-          <Route path="/" element={<Login />} />
+          {/* Always use /login for the login page; redirect root to /login to avoid duplicated component mount differences */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin-dashboard" element={isAuthenticated() && getUser()?.role==='admin' ? <AdminDashboard /> : <Navigate to="/login" replace />} />
