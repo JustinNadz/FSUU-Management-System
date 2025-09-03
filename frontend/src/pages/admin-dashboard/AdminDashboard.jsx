@@ -19,6 +19,10 @@ export default function AdminDashboard() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [profileImage, setProfileImage] = useState(() => {
+    const saved = localStorage.getItem('adminProfileImage');
+    return saved || null;
+  })
 
   // All static sample data removed. Real data should be fetched from API later.
   const stats = useMemo(() => ({
@@ -218,7 +222,15 @@ export default function AdminDashboard() {
               className="flex items-center gap-1.5 sm:gap-2 hover:bg-gray-50 rounded-lg p-1.5 sm:p-2 transition-colors duration-200"
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-red-600 text-white grid place-items-center text-xs font-medium overflow-hidden">
-                <span>A</span>
+                {profileImage ? (
+                  <img 
+                    src={profileImage} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>A</span>
+                )}
               </div>
               <span className="text-xs font-medium hidden sm:block">ADMINISTRATOR</span>
               <Icon name="ChevronDown" size={14} className={`sm:text-base transition-transform duration-200 ${showProfileMenu ? 'rotate-180' : ''}`} />
@@ -433,18 +445,17 @@ export default function AdminDashboard() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="relative">
                     <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                      <img 
-                        src="/images/default-avatar.png" 
-                        alt="Profile" 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextSibling.style.display = 'flex';
-                        }}
-                      />
-                      <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-xl font-bold" style={{display: 'none'}}>
-                        A
-                      </div>
+                      {profileImage ? (
+                        <img 
+                          src={profileImage} 
+                          alt="Profile" 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-xl font-bold">
+                          A
+                        </div>
+                      )}
                     </div>
                     <input
                       type="file"
@@ -454,12 +465,8 @@ export default function AdminDashboard() {
                         if (file) {
                           const reader = new FileReader();
                           reader.onload = (event) => {
-                            const img = document.querySelector('img[alt="Profile"]');
-                            if (img) {
-                              img.src = event.target.result;
-                              img.style.display = 'block';
-                              img.nextSibling.style.display = 'none';
-                            }
+                            setProfileImage(event.target.result);
+                            localStorage.setItem('adminProfileImage', event.target.result);
                           };
                           reader.readAsDataURL(file);
                         }
@@ -471,7 +478,10 @@ export default function AdminDashboard() {
                     <h3 className="text-sm font-medium text-gray-900">Profile Picture</h3>
                     <p className="text-xs text-gray-500">Click to upload a new photo</p>
                     <button 
-                      onClick={() => document.querySelector('input[type="file"]').click()}
+                      onClick={() => {
+                        const input = document.querySelector('input[type="file"]');
+                        if (input) input.click();
+                      }}
                       className="mt-1 text-xs text-blue-600 hover:text-blue-700"
                     >
                       Choose File

@@ -17,6 +17,10 @@ export default function StudentDashboard() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [profileImage, setProfileImage] = useState(() => {
+    const saved = localStorage.getItem('studentProfileImage');
+    return saved || null;
+  })
   const user = getUser()
 
   useEffect(()=> { setActive(section || 'dashboard') }, [section])
@@ -65,7 +69,17 @@ export default function StudentDashboard() {
           </div>
           <div className="relative profile-menu-container">
             <button onClick={()=>setShowProfileMenu(!showProfileMenu)} className="flex items-center gap-1.5 sm:gap-2 hover:bg-gray-50 rounded-lg p-1.5 sm:p-2 transition-colors duration-200">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-blue-600 text-white grid place-items-center text-xs font-medium"><span>{user?.name?.[0]||'S'}</span></div>
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-blue-600 text-white grid place-items-center text-xs font-medium overflow-hidden">
+                {profileImage ? (
+                  <img 
+                    src={profileImage} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>{user?.name?.[0]||'S'}</span>
+                )}
+              </div>
               <span className="text-xs font-medium hidden sm:block">{(user?.name || 'STUDENT').toUpperCase()}</span>
               <Icon name="ChevronDown" size={14} className={`sm:text-base transition-transform duration-200 ${showProfileMenu?'rotate-180':''}`} />
             </button>
@@ -201,7 +215,7 @@ export default function StudentDashboard() {
           {active==='profile' && (
             <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">My Profile</h2>
-              <StudentProfile user={user} setActive={setActive} />
+              <StudentProfile user={user} setActive={setActive} profileImage={profileImage} setProfileImage={setProfileImage} />
             </div>
           )}
 
@@ -293,7 +307,7 @@ function Stat({ icon, label, value, color }) {
   )
 }
 
-function StudentProfile({ user, setActive }) {
+function StudentProfile({ user, setActive, profileImage, setProfileImage }) {
   const [profile, setProfile] = useState({ name: user?.name || '', email: user?.email || '' })
   const update = (k,v) => setProfile(p=>({...p,[k]:v}))
   const save = () => {
@@ -312,18 +326,17 @@ function StudentProfile({ user, setActive }) {
       <div className="flex items-center gap-4 mb-6">
         <div className="relative">
           <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-            <img 
-              src="/images/default-avatar.png" 
-              alt="Profile" 
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            <div className="w-full h-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-xl font-bold" style={{display: 'none'}}>
-              M
-            </div>
+            {profileImage ? (
+              <img 
+                src={profileImage} 
+                alt="Profile" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-xl font-bold">
+                M
+              </div>
+            )}
           </div>
           <input
             type="file"
@@ -333,12 +346,8 @@ function StudentProfile({ user, setActive }) {
               if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                  const img = document.querySelector('img[alt="Profile"]');
-                  if (img) {
-                    img.src = event.target.result;
-                    img.style.display = 'block';
-                    img.nextSibling.style.display = 'none';
-                  }
+                  setProfileImage(event.target.result);
+                  localStorage.setItem('studentProfileImage', event.target.result);
                 };
                 reader.readAsDataURL(file);
               }
@@ -350,7 +359,10 @@ function StudentProfile({ user, setActive }) {
           <h3 className="text-sm font-medium text-gray-900">Profile Picture</h3>
           <p className="text-xs text-gray-500">Click to upload a new photo</p>
           <button 
-            onClick={() => document.querySelector('input[type="file"]').click()}
+            onClick={() => {
+              const input = document.querySelector('input[type="file"]');
+              if (input) input.click();
+            }}
             className="mt-1 text-xs text-blue-600 hover:text-blue-700"
           >
             Choose File
