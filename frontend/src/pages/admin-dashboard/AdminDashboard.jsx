@@ -2,16 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Icon from '../../components/AppIcon'
 import { signOut } from '../../utils/auth'
-<<<<<<< HEAD
-import { departments as deptData, courses as courseData, academicYears, faculty as facultyData, students as studentData } from '../../data/mockData'
-
-// Admin navigation modules (per slides)
-const ADMIN_MENU = [
-  { id: 'dashboard', label: 'DASHBOARD', icon: 'BarChart3' },
-  { id: 'faculty', label: 'FACULTY', icon: 'Users' },
-  { id: 'students', label: 'STUDENTS', icon: 'GraduationCap' },
-  { id: 'reports', label: 'REPORTS', icon: 'FileBarChart2' },
-=======
 import { students as studentData, faculty as facultyData, departments as deptData, courses as courseData, academicYears } from '../../data/mockData'
 
 const ADMIN_MENU = [
@@ -19,7 +9,6 @@ const ADMIN_MENU = [
   { id: 'faculty', label: 'FACULTY', icon: 'GraduationCap' },
   { id: 'students', label: 'STUDENTS', icon: 'Users' },
   { id: 'reports', label: 'REPORTS', icon: 'FileText' },
->>>>>>> 0b4e87f ( frontend)
   { id: 'settings', label: 'SYSTEM\nSETTINGS', icon: 'Settings' }
 ]
 
@@ -31,42 +20,6 @@ export default function AdminDashboard() {
   const [isMobile, setIsMobile] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
 
-<<<<<<< HEAD
-  // Local state using mockData (replace with API later)
-  const [coursesState] = useState(courseData)
-  const [departmentsState] = useState(deptData)
-  const [facultyState, setFacultyState] = useState(facultyData)
-  const [studentsState, setStudentsState] = useState(studentData)
-
-  const stats = useMemo(() => ({
-    totalCourses: coursesState.length,
-    totalDepartments: departmentsState.length,
-    totalFaculty: facultyState.length,
-    totalStudents: studentsState.length,
-    activeAcademicYear: '2025-2026'
-  }), [coursesState, departmentsState, facultyState, studentsState])
-
-  // Filters / search state
-  const [facultySearch, setFacultySearch] = useState('')
-  const [facultyDeptFilter, setFacultyDeptFilter] = useState('')
-  const [studentSearch, setStudentSearch] = useState('')
-  const [studentDeptFilter, setStudentDeptFilter] = useState('')
-  const [studentCourseFilter, setStudentCourseFilter] = useState('')
-
-  const departments = departmentsState.map(d => d.code)
-  const courses = coursesState.map(c => c.code)
-
-  const filteredFaculty = useMemo(() => facultyState.filter(f =>
-    (!facultyDeptFilter || f.department === facultyDeptFilter) &&
-    (!facultySearch || f.name.toLowerCase().includes(facultySearch.toLowerCase()) || f.employeeNo.toLowerCase().includes(facultySearch.toLowerCase()))
-  ), [facultyState, facultyDeptFilter, facultySearch])
-
-  const filteredStudents = useMemo(() => studentsState.filter(s =>
-    (!studentDeptFilter || s.department === studentDeptFilter) &&
-    (!studentCourseFilter || s.course === studentCourseFilter) &&
-    (!studentSearch || s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.studentNo.toLowerCase().includes(studentSearch.toLowerCase()))
-  ), [studentsState, studentDeptFilter, studentCourseFilter, studentSearch])
-=======
   // All static sample data removed. Real data should be fetched from API later.
   const stats = useMemo(() => ({
     totalStudents: studentData.length,
@@ -102,7 +55,6 @@ export default function AdminDashboard() {
       (!studentSearch || s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.studentNumber.includes(studentSearch))
     )
   })
->>>>>>> 0b4e87f ( frontend)
 
   // Auto-collapse sidebar on mobile
   useEffect(() => {
@@ -131,43 +83,17 @@ export default function AdminDashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showProfileMenu])
 
-<<<<<<< HEAD
-  const handleNavigation = (sectionId) => setActive(sectionId)
-=======
   const handleNavigation = (sectionId) => {
     // Only dashboard remains
     setActive(sectionId)
   }
->>>>>>> 0b4e87f ( frontend)
 
   const handleLogout = () => {
     signOut()
     navigate('/login')
   }
 
-<<<<<<< HEAD
-  const current = active === 'profile'
-    ? { id: 'profile', label: 'MY PROFILE', icon: 'User' }
-    : (ADMIN_MENU.find(m => m.id === active) || ADMIN_MENU[0])
-
-  // Profile editable info (local only for now)
-  const [profile, setProfile] = useState({ name: 'Administrator', email: 'admin@example.com', password: '' })
-  const updateProfileField = (k, v) => setProfile(p => ({ ...p, [k]: v }))
-
-  // Simple create/edit handlers (mock)
-  const addFaculty = () => {
-    const name = prompt('Faculty Name:')
-    if (!name) return
-    setFacultyState(prev => [...prev, { id: Date.now(), employeeNo: 'F-'+(prev.length+1).toString().padStart(3,'0'), name, department: facultyDeptFilter || departments[0], status: 'Active' }])
-  }
-  const addStudent = () => {
-    const name = prompt('Student Name:')
-    if (!name) return
-    setStudentsState(prev => [...prev, { id: Date.now(), studentNo: 'S-'+(prev.length+1).toString().padStart(3,'0'), name, course: studentCourseFilter || courses[0], department: studentDeptFilter || departments[0], yearLevel: 1, status: 'Active' }])
-  }
-=======
   const current = ADMIN_MENU.find(m => m.id === active) || ADMIN_MENU[0]
->>>>>>> 0b4e87f ( frontend)
 
   return (
     <div className="h-screen bg-background flex relative">
@@ -233,10 +159,6 @@ export default function AdminDashboard() {
                     {item.label.replace('\n', ' ')}
                   </div>
                 )}
-<<<<<<< HEAD
-                {/* Removed faculty, students, reports modules */}
-=======
->>>>>>> 0b4e87f ( frontend)
               </button>
             )
           })}
@@ -307,13 +229,6 @@ export default function AdminDashboard() {
               <div className="absolute right-0 top-full mt-2 w-48 sm:w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fade-in-up">
                 <div className="py-2">
                   <button
-<<<<<<< HEAD
-                    onClick={() => { setActive('profile'); setShowProfileMenu(false); }}
-                    className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-gray-50 hover:text-gray-800 transition-colors duration-150 group"
-                  >
-                    <Icon name="User" size={16} className="sm:text-lg text-gray-600 group-hover:text-gray-800" />
-                    <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-800">My Profile</span>
-=======
                     onClick={() => navigate('/lms-dashboard')}
                     className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150 group"
                   >
@@ -326,7 +241,6 @@ export default function AdminDashboard() {
                   >
                     <Icon name="GraduationCap" size={16} className="sm:text-lg text-gray-600 group-hover:text-purple-600" />
                     <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-purple-700">Switch to Teacher</span>
->>>>>>> 0b4e87f ( frontend)
                   </button>
                   <div className="border-t border-gray-200 my-1"></div>
                   <button
@@ -344,46 +258,6 @@ export default function AdminDashboard() {
 
         {/* Content */}
         <main className="p-2 sm:p-4 md:p-6 relative">
-<<<<<<< HEAD
-          {active === 'dashboard' && (
-            <SectionWrapper title="System Overview" icon="BarChart3" subtitle="Total number of students & faculty, plus counts per course/department (charts placeholder)">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-                <StatCard icon="UserRound" label="Students" value={stats.totalStudents} color="blue" />
-                <StatCard icon="Users" label="Faculty" value={stats.totalFaculty} color="green" />
-                <StatCard icon="BookOpen" label="Courses" value={stats.totalCourses} color="yellow" />
-                <StatCard icon="Building" label="Departments" value={stats.totalDepartments} color="purple" />
-                <MiniCard icon="Calendar" label="Acad Year" value={stats.activeAcademicYear} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ChartPlaceholder title="Students per Course" labels={courses} values={courses.map(c => filteredStudents.filter(s=>s.course===c).length)} />
-                <ChartPlaceholder title="Faculty per Department" labels={departments} values={departments.map(d => filteredFaculty.filter(f=>f.department===d).length)} />
-              </div>
-            </SectionWrapper>
-          )}
-          {active === 'faculty' && (
-            <SectionWrapper title="Faculty" icon="Users" subtitle="Add, edit, archive, filter and search faculty members">
-              <div className="flex flex-wrap gap-2 mb-4 items-center">
-                <input value={facultySearch} onChange={e=>setFacultySearch(e.target.value)} placeholder="Search faculty" className="h-9 px-3 border rounded text-xs" />
-                <select value={facultyDeptFilter} onChange={e=>setFacultyDeptFilter(e.target.value)} className="h-9 px-2 border rounded text-xs"><option value="">All Departments</option>{departments.map(d=> <option key={d}>{d}</option>)}</select>
-                <button onClick={addFaculty} className="h-9 px-4 bg-blue-600 text-white rounded text-xs">Add Faculty</button>
-              </div>
-              <div className="overflow-auto border border-gray-200 rounded">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50"><tr>{['Emp #','Name','Department','Status','Actions'].map(h=> <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr></thead>
-                  <tbody>
-                    {filteredFaculty.map(f => (
-                      <tr key={f.id} className="border-t border-gray-100 hover:bg-gray-50">
-                        <td className="px-3 py-2 text-xs font-medium">{f.employeeNo}</td>
-                        <td className="px-3 py-2 text-xs">{f.name}</td>
-                        <td className="px-3 py-2 text-xs">{f.department}</td>
-                        <td className="px-3 py-2 text-xs"><StatusBadge status={f.status} /></td>
-                        <td className="px-3 py-2 text-xs flex gap-2"><button className="text-blue-600 hover:underline" onClick={()=>alert('Edit TBD')}>Edit</button><button className="text-yellow-600 hover:underline" onClick={()=>alert('Archive TBD')}>Archive</button></td>
-                      </tr>
-                    ))}
-                    {filteredFaculty.length===0 && (
-                      <tr><td className="px-3 py-6 text-center text-xs text-gray-400" colSpan={5}>No faculty found</td></tr>
-                    )}
-=======
           {/* DASHBOARD SECTION */}
           {active === 'dashboard' && (
             <div className="space-y-4 sm:space-y-6">
@@ -456,40 +330,11 @@ export default function AdminDashboard() {
                         </td>
                       </tr>
                     ))}
->>>>>>> 0b4e87f ( frontend)
                   </tbody>
                 </table>
               </div>
             </SectionWrapper>
           )}
-<<<<<<< HEAD
-          {active === 'students' && (
-            <SectionWrapper title="Students" icon="UserRound" subtitle="Add, edit, archive, filter and search students">
-              <div className="flex flex-wrap gap-2 mb-4 items-center">
-                <input value={studentSearch} onChange={e=>setStudentSearch(e.target.value)} placeholder="Search students" className="h-9 px-3 border rounded text-xs" />
-                <select value={studentDeptFilter} onChange={e=>setStudentDeptFilter(e.target.value)} className="h-9 px-2 border rounded text-xs"><option value="">All Departments</option>{departments.map(d=> <option key={d}>{d}</option>)}</select>
-                <select value={studentCourseFilter} onChange={e=>setStudentCourseFilter(e.target.value)} className="h-9 px-2 border rounded text-xs"><option value="">All Courses</option>{courses.map(c=> <option key={c}>{c}</option>)}</select>
-                <button onClick={addStudent} className="h-9 px-4 bg-blue-600 text-white rounded text-xs">Add Student</button>
-              </div>
-              <div className="overflow-auto border border-gray-200 rounded">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50"><tr>{['Stud #','Name','Course','Dept','Year','Status','Actions'].map(h=> <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr></thead>
-                  <tbody>
-                    {filteredStudents.map(s => (
-                      <tr key={s.id} className="border-t border-gray-100 hover:bg-gray-50">
-                        <td className="px-3 py-2 text-xs font-medium">{s.studentNo}</td>
-                        <td className="px-3 py-2 text-xs">{s.name}</td>
-                        <td className="px-3 py-2 text-xs">{s.course}</td>
-                        <td className="px-3 py-2 text-xs">{s.department}</td>
-                        <td className="px-3 py-2 text-xs">{s.yearLevel}</td>
-                        <td className="px-3 py-2 text-xs"><StatusBadge status={s.status} /></td>
-                        <td className="px-3 py-2 text-xs flex gap-2"><button className="text-blue-600 hover:underline" onClick={()=>alert('Edit TBD')}>Edit</button><button className="text-yellow-600 hover:underline" onClick={()=>alert('Archive TBD')}>Archive</button></td>
-                      </tr>
-                    ))}
-                    {filteredStudents.length===0 && (
-                      <tr><td className="px-3 py-6 text-center text-xs text-gray-400" colSpan={7}>No students found</td></tr>
-                    )}
-=======
 
           {/* STUDENTS SECTION */}
           {active === 'students' && (
@@ -541,23 +386,11 @@ export default function AdminDashboard() {
                         </td>
                       </tr>
                     ))}
->>>>>>> 0b4e87f ( frontend)
                   </tbody>
                 </table>
               </div>
             </SectionWrapper>
           )}
-<<<<<<< HEAD
-          {active === 'reports' && (
-            <SectionWrapper title="Reports" icon="FileBarChart2" subtitle="Generate filtered student & faculty counts (placeholder)">
-              <div className="grid md:grid-cols-2 gap-6">
-                <ReportBlock title="Students per Course" labels={courses} values={courses.map(c => filteredStudents.filter(s=>s.course===c).length)} />
-                <ReportBlock title="Faculty per Department" labels={departments} values={departments.map(d => filteredFaculty.filter(f=>f.department===d).length)} />
-              </div>
-              <p className="text-[10px] text-gray-400 mt-4">Export / print functionality to be implemented.</p>
-            </SectionWrapper>
-          )}
-=======
 
           {/* REPORTS SECTION */}
           {active === 'reports' && (
@@ -592,40 +425,11 @@ export default function AdminDashboard() {
           )}
 
           {/* SYSTEM SETTINGS SECTION */}
->>>>>>> 0b4e87f ( frontend)
           {active === 'settings' && (
             <SectionWrapper title="System Settings" icon="Settings" subtitle="Manage courses, departments & academic years">
               <SettingsTabs />
             </SectionWrapper>
           )}
-<<<<<<< HEAD
-          {active === 'profile' && (
-            <SectionWrapper title="My Profile" icon="User" subtitle="Edit signed in profile or logout">
-              <div className="space-y-4 max-w-md">
-                <div>
-                  <label className="block text-[11px] font-medium mb-1">Name</label>
-                  <input value={profile.name} onChange={e=>updateProfileField('name', e.target.value)} className="w-full h-9 px-3 border rounded text-xs" />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-medium mb-1">Email</label>
-                  <input value={profile.email} onChange={e=>updateProfileField('email', e.target.value)} className="w-full h-9 px-3 border rounded text-xs" />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-medium mb-1">Password</label>
-                  <input type="password" value={profile.password} onChange={e=>updateProfileField('password', e.target.value)} className="w-full h-9 px-3 border rounded text-xs" placeholder="********" />
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={()=>alert('Save TBD')} className="h-9 px-4 bg-blue-600 text-white rounded text-xs">Save Changes</button>
-                  <button onClick={handleLogout} className="h-9 px-4 bg-red-600 text-white rounded text-xs">Logout</button>
-                </div>
-              </div>
-            </SectionWrapper>
-          )}
-=======
-
-            {/* PROFILE SECTION */}
-          {/* Profile section removed per request */}
->>>>>>> 0b4e87f ( frontend)
         </main>
       </div>
     </div>
@@ -838,29 +642,3 @@ function StatusBadge({ status }) {
     <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${active ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>{status || '--'}</span>
   )
 }
-<<<<<<< HEAD
-
-// Simple chart placeholders (CSS bars)
-function ChartPlaceholder({ title, labels, values }) {
-  const max = Math.max(1, ...values)
-  return (
-    <div className="border border-gray-200 rounded-lg p-4">
-      <h3 className="font-semibold text-sm mb-4">{title}</h3>
-      <div className="space-y-2">
-        {labels.map((l,i) => (
-          <div key={l} className="flex items-center gap-2">
-            <span className="w-14 shrink-0 text-[10px] font-medium text-gray-600">{l}</span>
-            <div className="flex-1 h-3 bg-gray-100 rounded relative overflow-hidden">
-              <div className="h-full bg-blue-500/80" style={{ width: (values[i]/max*100)+'%' }}></div>
-            </div>
-            <span className="w-6 text-[10px] text-right text-gray-600">{values[i]}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ReportBlock(props) { return <ChartPlaceholder {...props} /> }
-=======
->>>>>>> 0b4e87f ( frontend)

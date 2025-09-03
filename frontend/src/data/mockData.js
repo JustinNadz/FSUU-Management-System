@@ -18,23 +18,6 @@ export const academicYears = [
   { year: '2025-2026', status: 'Active' }
 ]
 
-<<<<<<< HEAD
-// Added back student & faculty mock data for admin modules
-
-export const faculty = [
-  { id: 1, employeeNo: 'F-001', name: 'Juan Dela Cruz', department: 'CCS', status: 'Active' },
-  { id: 2, employeeNo: 'F-002', name: 'Maria Santos', department: 'CBA', status: 'Active' },
-  { id: 3, employeeNo: 'F-003', name: 'Pedro Reyes', department: 'CAS', status: 'Inactive' }
-]
-
-export const students = [
-  { id: 1, studentNo: 'S-2025-001', name: 'Anna Flores', course: 'BSIT', department: 'CCS', yearLevel: 1, status: 'Active' },
-  { id: 2, studentNo: 'S-2025-002', name: 'Ben Cruz', course: 'BSIT', department: 'CCS', yearLevel: 2, status: 'Active' },
-  { id: 3, studentNo: 'S-2025-003', name: 'Carla Mendoza', course: 'BSCS', department: 'CCS', yearLevel: 3, status: 'Active' },
-  { id: 4, studentNo: 'S-2025-004', name: 'David Garcia', course: 'BSBA', department: 'CBA', yearLevel: 1, status: 'Inactive' }
-]
-
-=======
 export const faculty = [
   { id: 'T001', name: 'June Baldueza', dept: 'CCS', status: 'Active' },
   { id: 'T002', name: 'Ana Cruz', dept: 'CCS', status: 'Active' },
@@ -60,4 +43,3 @@ export const teacherClasses = [
     studentNumbers: ['23100000758','23100000111','23100000999']
   }
 ]
->>>>>>> 0b4e87f ( frontend)
