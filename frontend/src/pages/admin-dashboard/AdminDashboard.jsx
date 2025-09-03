@@ -429,6 +429,56 @@ export default function AdminDashboard() {
             <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">My Profile</h2>
               <div className="space-y-4 max-w-sm">
+                {/* Profile Picture Section */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="relative">
+                    <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                      <img 
+                        src="/images/default-avatar.png" 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-xl font-bold" style={{display: 'none'}}>
+                        A
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            const img = document.querySelector('img[alt="Profile"]');
+                            if (img) {
+                              img.src = event.target.result;
+                              img.style.display = 'block';
+                              img.nextSibling.style.display = 'none';
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900">Profile Picture</h3>
+                    <p className="text-xs text-gray-500">Click to upload a new photo</p>
+                    <button 
+                      onClick={() => document.querySelector('input[type="file"]').click()}
+                      className="mt-1 text-xs text-blue-600 hover:text-blue-700"
+                    >
+                      Choose File
+                    </button>
+                  </div>
+                </div>
+                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                   <input 
@@ -453,7 +503,15 @@ export default function AdminDashboard() {
                     className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
                   />
                 </div>
-                <div className="pt-4">
+                <div className="flex gap-2 pt-4">
+                  <button 
+                    onClick={() => {
+                      alert('Profile picture saved successfully!');
+                    }}
+                    className="h-9 px-4 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors"
+                  >
+                    Save Changes
+                  </button>
                   <button 
                     onClick={() => setActive('change-password')}
                     className="h-9 px-4 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
