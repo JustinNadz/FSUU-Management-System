@@ -14,11 +14,26 @@ RUN apt-get update && apt-get install -y \
     mariadb-client \
     libpq-dev \
     postgresql-client \
-    && docker-php-ext-configure pgsql \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip pdo_pgsql pgsql \
+    postgresql-server-dev-all \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && php -m | grep -i pdo
+    && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions separately for better reliability
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Install PostgreSQL extensions with multiple approaches for maximum compatibility
+RUN docker-php-ext-configure pgsql --with-pgsql=/usr \
+    && docker-php-ext-install pdo_pgsql pgsql
+
+# Alternative installation method if the above fails
+RUN if ! php -m | grep -q pdo_pgsql; then \
+        echo "Installing PostgreSQL extensions via alternative method..."; \
+        docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql; \
+        docker-php-ext-install pdo_pgsql pgsql; \
+    fi
+
+# Final verification - this will fail the build if extensions aren't installed
+RUN php -m | grep -i pdo && php -m | grep -i pgsql && echo "✅ PostgreSQL extensions successfully installed"
 
 # Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
@@ -31,6 +46,9 @@ COPY . .
 
 # Copy .env file specifically
 COPY .env /var/www/html/.env
+
+# Copy PHP configuration
+COPY php.ini /usr/local/etc/php/conf.d/custom.ini
 
 # Install Composer globally
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
@@ -47,17 +65,23 @@ RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available
 
 # Create startup script
 RUN echo '#!/bin/bash\n\
-echo "Starting Laravel application..."\n\
-echo "Checking .env file..."\n\
+echo "🚀 Starting Laravel application..."\n\
+echo "📁 Checking .env file..."\n\
 ls -la /var/www/html/.env\n\
-echo "Checking PHP extensions..."\n\
+echo "🔍 Checking PHP extensions..."\n\
 php -m | grep -i pdo\n\
-echo "Testing database connection..."\n\
+php -m | grep -i pgsql\n\
+echo "🔧 Verifying PostgreSQL driver..."\n\
+php -r "if (extension_loaded('pdo_pgsql')) { echo '✅ pdo_pgsql extension is loaded'; } else { echo '❌ pdo_pgsql extension is NOT loaded'; }"\n\
+php -r "if (extension_loaded('pgsql')) { echo '✅ pgsql extension is loaded'; } else { echo '❌ pgsql extension is NOT loaded'; }"\n\
+echo "🧪 Running comprehensive database test..."\n\
+php /var/www/html/test-postgres.php\n\
+echo "⚙️ Caching configuration..."\n\
 php artisan config:cache\n\
 php artisan route:cache\n\
-echo "Running migrations..."\n\
-php artisan migrate --force || echo "Migration failed, continuing..."\n\
-echo "Starting Apache..."\n\
+echo "🗄️ Running migrations..."\n\
+php artisan migrate --force || echo "⚠️ Migration failed, continuing..."\n\
+echo "🌐 Starting Apache..."\n\
 apache2-foreground' > /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
 
