@@ -4,6 +4,8 @@ import Icon from '../../components/AppIcon'
 import { signOut, getUser } from '../../utils/auth'
 import { courses as courseData, departments as deptData, students as studentData } from '../../data/mockData'
 
+
+
 // Faculty dashboard (simplified view)
 const MENU = [
   { id: 'dashboard', label: 'DASHBOARD', icon: 'LayoutGrid' },
@@ -37,13 +39,24 @@ export default function FacultyDashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showProfileMenu])
 
-  const myCourses = useMemo(()=> courseData.filter(c => c.dept === 'CCS'), []) // placeholder
-  const myStudents = useMemo(()=> studentData.filter(s => myCourses.some(c=>c.code===s.course)), [myCourses])
+  // Hardcoded data for testing
+  const myCourses = [
+    { code: 'BSIT', name: 'BS Information Technology', dept: 'CCS', status: 'Active' },
+    { code: 'BSCS', name: 'BS Computer Science', dept: 'CCS', status: 'Active' }
+  ]
+  
+  const myStudents = [
+    { studentNumber: '23100000758', name: 'Maria Luna Santos', course: 'BSIT', dept: 'CCS', status: 'Active' },
+    { studentNumber: '23100000111', name: 'Janelle Mae Dela Cruz', course: 'BSIT', dept: 'CCS', status: 'Active' },
+    { studentNumber: '23100000999', name: 'Kyle Miguel Ramos', course: 'BSCS', dept: 'CCS', status: 'Active' }
+  ]
 
   const stats = {
     courses: myCourses.length,
     students: myStudents.length
   }
+  
+
 
   const handleLogout = () => { signOut(); navigate('/login') }
 
@@ -123,14 +136,102 @@ export default function FacultyDashboard() {
         </header>
         <main className="p-2 sm:p-4 md:p-6 space-y-6">
           {active==='dashboard' && (
-            <Card title="Dashboard" subtitle="Overview of your classes & students">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <Stat icon="BookOpen" label="My Courses" value={stats.courses} color="blue" />
-                <Stat icon="UserRound" label="My Students" value={stats.students} color="green" />
-                <Stat icon="Calendar" label="Acad Year" value={'2025-2026'} color="purple" />
+            <div className="space-y-6">
+              {/* Welcome Section */}
+              <div className="bg-white border border-border rounded-lg p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 text-white grid place-items-center rounded-full">
+                    <Icon name="User" size={32} />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Welcome</h1>
+                    <p className="text-lg text-gray-600">{user?.name || 'FACULTY'}</p>
+                  </div>
+                </div>
               </div>
-              <p className="text-[11px] text-gray-500">Charts & more detailed analytics can be added here.</p>
-            </Card>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="BookOpen" size={24} className="text-blue-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-blue-900">{stats.courses}</p>
+                      <p className="text-sm text-blue-600">My Courses</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="UserRound" size={24} className="text-green-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-green-900">{stats.students}</p>
+                      <p className="text-sm text-green-600">My Students</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="Calendar" size={24} className="text-purple-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-purple-900">2025-2026</p>
+                      <p className="text-sm text-purple-600">Academic Year</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="GraduationCap" size={24} className="text-orange-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-orange-900">CCS</p>
+                      <p className="text-sm text-orange-600">Department</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Current Active Class */}
+              <div className="bg-white border border-border rounded-lg p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Current Active Class</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Schedule</label>
+                    <p className="text-sm text-gray-900">MWF 09:00-10:00</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Room</label>
+                    <p className="text-sm text-gray-900">Lab 1</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Units</label>
+                    <p className="text-sm text-gray-900">3</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Students Enrolled</label>
+                    <p className="text-sm text-gray-900">{stats.students}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="bg-white border border-border rounded-lg p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-blue-600">0</p>
+                    <p className="text-sm text-gray-600">Assignments</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-green-600">0</p>
+                    <p className="text-sm text-gray-600">Quizzes</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-purple-600">0</p>
+                    <p className="text-sm text-gray-600">Projects</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
           {active==='classes' && (
             <Card title="My Classes" subtitle="List of courses you handle">
@@ -139,7 +240,7 @@ export default function FacultyDashboard() {
           )}
           {active==='students' && (
             <Card title="Students" subtitle="Students enrolled in your courses">
-              <Table columns={['Student #','Name','Course','Dept','Year','Status']} rows={myStudents.map(s=>[s.studentNo,s.name,s.course,s.department,s.yearLevel,s.status])} empty="No students" />
+              <Table columns={['Student #','Name','Course','Dept','Year','Status']} rows={myStudents.map(s=>[s.studentNumber,s.name,s.course,s.dept,'--',s.status])} empty="No students" />
             </Card>
           )}
           {active==='profile' && (

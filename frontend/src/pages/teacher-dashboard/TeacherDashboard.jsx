@@ -5,7 +5,9 @@ import { signOut, getUser } from '../../utils/auth'
 import { teacherClasses, students as allStudents } from '../../data/mockData'
 
 const TEACHER_MENU = [
-  { id: 'dashboard', label: 'DASHBOARD', icon: 'BarChart3' }
+  { id: 'dashboard', label: 'DASHBOARD', icon: 'BarChart3' },
+  { id: 'classes', label: 'MY CLASSES', icon: 'NotebookPen' },
+  { id: 'students', label: 'STUDENTS', icon: 'UserRound' }
 ]
 
 export default function TeacherDashboard() {
@@ -20,8 +22,10 @@ export default function TeacherDashboard() {
   const user = getUser()
   const teacherId = user?.teacherId || 'T001'
   const teacherName = user?.role === 'teacher' ? (user?.name || 'JUNE BALDUEZA') : 'JUNE BALDUEZA'
-  const activeClass = teacherClasses.find(c => c.teacherId === teacherId) || null
+  
+  const activeClass = teacherClasses.find(c => c.teacherId === teacherId) || teacherClasses[0] // fallback to first class
   const classStudents = activeClass ? allStudents.filter(s => activeClass.studentNumbers.includes(s.studentNumber)) : []
+  
   const [students] = useState(classStudents)
 
   // Auto-collapse sidebar on mobile
@@ -197,10 +201,18 @@ export default function TeacherDashboard() {
               <div className="absolute right-0 top-full mt-2 w-48 sm:w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fade-in-up">
                 <div className="py-2">
                   <button
+                    onClick={() => { setActive('profile'); setShowProfileMenu(false) }}
+                    className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-gray-50 hover:text-gray-800 transition-colors duration-150 group"
+                  >
+                    <Icon name="User" size={16} className="sm:text-lg text-gray-600 group-hover:text-gray-800" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-800">My Profile</span>
+                  </button>
+                  <div className="border-t border-gray-200 my-1"></div>
+                  <button
                     onClick={() => navigate('/lms-dashboard')}
                     className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150 group"
                   >
-                    <Icon name="User" size={16} className="sm:text-lg text-gray-600 group-hover:text-blue-600" />
+                    <Icon name="Users" size={16} className="sm:text-lg text-gray-600 group-hover:text-blue-600" />
                     <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-blue-700">Switch to Student</span>
                   </button>
                   <button
@@ -317,15 +329,121 @@ export default function TeacherDashboard() {
             </div>
           )}
 
-          {/* Students section removed (dashboard only) */}
+          {/* My Classes Section */}
+          {active === 'classes' && (
+            <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">My Classes</h2>
+              <div className="space-y-4">
+                {activeClass ? (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-blue-900">{activeClass.subject}</h3>
+                      <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{activeClass.classId}</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p><strong>Schedule:</strong> {activeClass.schedule}</p>
+                        <p><strong>Room:</strong> {activeClass.room}</p>
+                      </div>
+                      <div>
+                        <p><strong>Units:</strong> {activeClass.units}</p>
+                        <p><strong>Students:</strong> {students.length}</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-8">No classes assigned</p>
+                )}
+              </div>
+            </div>
+          )}
 
-          {/* Removed attendance section */}
+          {/* Students Section */}
+          {active === 'students' && (
+            <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">My Students</h2>
+              <div className="overflow-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Student #</th>
+                      <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Name</th>
+                      <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Course</th>
+                      <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {students.length > 0 ? (
+                      students.map((student, index) => (
+                        <tr key={index} className="border-t border-gray-100 hover:bg-gray-50">
+                          <td className="px-3 py-2 text-xs">{student.studentNumber}</td>
+                          <td className="px-3 py-2 text-xs">{student.name}</td>
+                          <td className="px-3 py-2 text-xs">{student.course}</td>
+                          <td className="px-3 py-2 text-xs">
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              student.status === 'Active' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {student.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td className="px-3 py-6 text-center text-xs text-gray-400" colSpan={4}>
+                          No students enrolled
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
-          {/* Removed course materials related sections (lessons, modules, assignments, projects, quizzes, exams) */}
+          {/* Profile Section */}
+          {active === 'profile' && (
+            <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">My Profile</h2>
+              <div className="space-y-4 max-w-sm">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input 
+                    value={teacherName} 
+                    disabled 
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Teacher ID</label>
+                  <input 
+                    value={teacherId} 
+                    disabled 
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                  <input 
+                    value="Teacher" 
+                    disabled 
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  />
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <button 
+                    onClick={handleLogout} 
+                    className="h-9 px-4 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
-          {/* Removed grade management section */}
-
-          {/* Removed reports section */}
         </main>
       </div>
     </div>

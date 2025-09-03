@@ -33,6 +33,8 @@ export default function Routes() {
           <Route path="/lms-dashboard/:section" element={isAuthenticated() ? <LMSDashboard /> : <Navigate to="/login" replace />} />
           <Route path="/teacher-dashboard" element={isAuthenticated() ? <TeacherDashboard /> : <Navigate to="/login" replace />} />
           <Route path="/teacher-dashboard/:section" element={isAuthenticated() ? <TeacherDashboard /> : <Navigate to="/login" replace />} />
+          <Route path="/teacher-dashboards" element={isAuthenticated() ? <TeacherDashboard /> : <Navigate to="/login" replace />} />
+          <Route path="/teacher-dashboards/:section" element={isAuthenticated() ? <TeacherDashboard /> : <Navigate to="/login" replace />} />
           <Route path="/design-system-overview-dashboard" element={<DesignSystemOverviewDashboard />} />
           <Route path="*" element={<NotFound />} />
         </RouterRoutes>

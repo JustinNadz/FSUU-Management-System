@@ -4,13 +4,13 @@ const DEMO_CREDENTIALS = {
   // Student Account
   student: {
     studentNumber: '23100000758',
-    password: '20031213',
+    password: 'anna123',
     role: 'student'
   },
   // Teacher Account
   teacher: {
-    teacherId: 'T001',
-    password: 'teacher2024',
+    teacherId: 'T-001',
+    password: 'juan123',
     role: 'teacher'
   },
   // Admin Account

@@ -23,8 +23,9 @@ export default function StudentDashboard() {
   useEffect(()=> { const r=()=>{const m=window.innerWidth<768; setIsMobile(m); if(m) setSidebarCollapsed(true)}; r(); window.addEventListener('resize',r); return ()=>window.removeEventListener('resize',r)},[])
   useEffect(()=> { const h=e=> { if(showProfileMenu && !e.target.closest('.profile-menu-container')) setShowProfileMenu(false) }; document.addEventListener('mousedown',h); return ()=>document.removeEventListener('mousedown',h)},[showProfileMenu])
 
-  const student = studentData.find(s=> s.studentNo === user?.userId)
-  const course = courseData.find(c=> c.code === student?.course)
+  // Get student data from mock data
+  const student = studentData.find(s => s.studentNumber === user?.studentNumber) || studentData[0]
+  const course = courseData.find(c => c.code === student?.course)
 
   const handleLogout = () => { signOut(); navigate('/login') }
 
@@ -86,28 +87,120 @@ export default function StudentDashboard() {
         </header>
         <main className="p-2 sm:p-4 md:p-6 space-y-6">
           {active==='dashboard' && (
-            <Card title="Dashboard" subtitle="Overview of your status & course">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <Stat icon="BookOpen" label="Course" value={course?.code || '--'} color="blue" />
-                <Stat icon="GraduationCap" label="Year Level" value={student?.yearLevel || '--'} color="green" />
-                <Stat icon="UserRound" label="Status" value={student?.status || '--'} color="purple" />
+            <div className="space-y-6">
+              {/* Welcome Section */}
+              <div className="bg-white border border-border rounded-lg p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 text-white grid place-items-center rounded-full">
+                    <Icon name="User" size={32} />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Welcome</h1>
+                    <p className="text-lg text-gray-600">{student?.name || user?.name || 'STUDENT'}</p>
+                  </div>
+                </div>
               </div>
-              <p className="text-[11px] text-gray-500">More modules (grades, schedule) can be added later.</p>
-            </Card>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="UserRound" size={24} className="text-blue-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-blue-900">{student?.studentNumber || '--'}</p>
+                      <p className="text-sm text-blue-600">Student ID</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="BookOpen" size={24} className="text-green-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-green-900">{course?.code || '--'}</p>
+                      <p className="text-sm text-green-600">Course</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="GraduationCap" size={24} className="text-purple-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-purple-900">1st</p>
+                      <p className="text-sm text-purple-600">Year Level</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3">
+                    <Icon name="Shield" size={24} className="text-orange-600" />
+                    <div>
+                      <p className="text-2xl font-bold text-orange-900">{student?.status || '--'}</p>
+                      <p className="text-sm text-orange-600">Status</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Course Information */}
+              <div className="bg-white border border-border rounded-lg p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Current Course Information</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Course Code</label>
+                    <p className="text-sm text-gray-900">{course?.code || '--'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Course Name</label>
+                    <p className="text-sm text-gray-900">{course?.name || '--'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                    <p className="text-sm text-gray-900">{course?.dept || '--'}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+                    <p className="text-sm text-gray-900">2025-2026</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
           {active==='my-course' && (
             <Card title="My Course" subtitle="Course information">
-              <div className="space-y-2 text-xs">
-                <p><span className="font-semibold text-gray-700">Code:</span> {course?.code}</p>
-                <p><span className="font-semibold text-gray-700">Name:</span> {course?.name}</p>
-                <p><span className="font-semibold text-gray-700">Department:</span> {course?.dept}</p>
-                <p className="text-[10px] text-gray-400 mt-4">(Static mock data)</p>
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h3 className="text-lg font-semibold text-blue-900 mb-3">{course?.name || 'No Course Assigned'}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p><strong>Course Code:</strong> {course?.code || '--'}</p>
+                      <p><strong>Department:</strong> {course?.dept || '--'}</p>
+                    </div>
+                    <div>
+                      <p><strong>Status:</strong> {course?.status || '--'}</p>
+                      <p><strong>Academic Year:</strong> 2025-2026</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h4 className="text-md font-semibold text-gray-900 mb-2">Student Information</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p><strong>Student Number:</strong> {student?.studentNumber || '--'}</p>
+                      <p><strong>Name:</strong> {student?.name || '--'}</p>
+                    </div>
+                    <div>
+                      <p><strong>Status:</strong> {student?.status || '--'}</p>
+                      <p><strong>Year Level:</strong> 1st Year</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Card>
           )}
           {active==='profile' && (
             <Card title="My Profile" subtitle="Edit signed in profile or logout">
-              <StudentProfile user={user} student={student} onLogout={handleLogout} />
+              <StudentProfile user={user} onLogout={handleLogout} />
             </Card>
           )}
         </main>
@@ -149,10 +242,19 @@ function Stat({ icon, label, value, color }) {
   )
 }
 
-function StudentProfile({ user, student, onLogout }) {
-  const [profile, setProfile] = useState({ name: user?.name || '', password: '' })
+function StudentProfile({ user, onLogout }) {
+  const [profile, setProfile] = useState({ name: user?.name || '', email: user?.email || '', password: '' })
   const update = (k,v) => setProfile(p=>({...p,[k]:v}))
-  const save = () => { const auth = { ...user, name: profile.name }; localStorage.setItem('auth', JSON.stringify(auth)); alert('Profile saved (local only).') }
+  const save = () => {
+    const auth = { ...user, name: profile.name, email: profile.email }
+    localStorage.setItem('auth', JSON.stringify(auth))
+    alert('Profile saved (local only).')
+  }
+  
+  // Get student data from mock data
+  const student = studentData.find(s => s.studentNumber === user?.studentNumber) || studentData[0]
+  const course = courseData.find(c => c.code === student?.course)
+  
   return (
     <div className="space-y-4 max-w-sm">
       <div>
@@ -160,16 +262,20 @@ function StudentProfile({ user, student, onLogout }) {
         <input value={profile.name} onChange={e=>update('name', e.target.value)} className="w-full h-9 px-3 border rounded text-xs" />
       </div>
       <div>
-        <label className="block text-[11px] font-medium mb-1">Student #</label>
-        <input disabled value={student?.studentNo || user?.userId || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
+        <label className="block text-[11px] font-medium mb-1">Email</label>
+        <input value={profile.email} onChange={e=>update('email', e.target.value)} className="w-full h-9 px-3 border rounded text-xs" />
+      </div>
+      <div>
+        <label className="block text-[11px] font-medium mb-1">Student Number</label>
+        <input disabled value={student?.studentNumber || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
       </div>
       <div>
         <label className="block text-[11px] font-medium mb-1">Course</label>
-        <input disabled value={student?.course || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
+        <input disabled value={course?.name || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
       </div>
       <div>
-        <label className="block text-[11px] font-medium mb-1">Year Level</label>
-        <input disabled value={student?.yearLevel || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
+        <label className="block text-[11px] font-medium mb-1">Status</label>
+        <input disabled value={student?.status || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
       </div>
       <div>
         <label className="block text-[11px] font-medium mb-1">Password</label>
