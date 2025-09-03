@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Card, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
+<<<<<<< HEAD
 import { signIn, isAuthenticated, getUser } from '../../utils/auth'
+=======
+import { signIn } from '../../utils/auth'
+>>>>>>> 0b4e87f ( frontend)
 import { useLoading } from '../../components/LoadingProvider'
 
 export default function Login() {
@@ -18,7 +22,10 @@ export default function Login() {
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+<<<<<<< HEAD
   const [error, setError] = useState('')
+=======
+>>>>>>> 0b4e87f ( frontend)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,6 +42,7 @@ export default function Login() {
   }, [backgroundImages.length])
 
   const onFinish = async ({ identifier, password }) => {
+<<<<<<< HEAD
     setError('')
     show()
     try {
@@ -70,6 +78,24 @@ export default function Login() {
     }
   }, [navigate])
 
+=======
+    show()
+    await new Promise(r => setTimeout(r, 800))
+    const res = signIn(identifier, password)
+    hide()
+    if (res.ok) {
+      // Navigate based on user role
+      if (res.auth.role === 'teacher') {
+        navigate('/teacher-dashboard')
+      } else if (res.auth.role === 'admin') {
+        navigate('/admin-dashboard')
+      } else {
+        navigate('/lms-dashboard')
+      }
+    }
+  }
+
+>>>>>>> 0b4e87f ( frontend)
   return (
     <div className="relative min-h-screen slideshow-container">
       {/* Animated Background Slideshow */}
@@ -100,6 +126,7 @@ export default function Login() {
             />
           </div>
           <Form layout="vertical" onFinish={onFinish} className="animate-fade-in-up animation-delay-400">
+<<<<<<< HEAD
             {error && (
               <div className="mb-3 px-3 py-2 rounded-md bg-red-50 border border-red-200 text-red-600 text-xs font-medium animate-fade-in">
                 {error}
@@ -109,11 +136,21 @@ export default function Login() {
               label="User ID"
               name="identifier"
               rules={[{ required: true, message: 'Please enter your user ID' }]}
+=======
+            <Form.Item
+              label="Student Number, Teacher ID, or Admin ID"
+              name="identifier"
+              rules={[{ required: true, message: 'Please enter your student number, teacher ID, or admin ID' }]}
+>>>>>>> 0b4e87f ( frontend)
               className="animate-fade-in-up animation-delay-600"
             >
               <Input 
                 inputMode="numeric" 
+<<<<<<< HEAD
                 placeholder="Enter user ID" 
+=======
+                placeholder="e.g. 2024-000123" 
+>>>>>>> 0b4e87f ( frontend)
                 className="transition-all duration-300 hover:shadow-md focus:shadow-lg" 
               />
             </Form.Item>

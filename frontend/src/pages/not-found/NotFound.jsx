@@ -16,7 +16,11 @@ export default function NotFound() {
           Go to Login
         </Link>
         <Link
+<<<<<<< HEAD
           to="/admin-dashboard"
+=======
+          to="/lms-dashboard"
+>>>>>>> 0b4e87f ( frontend)
           className="px-5 py-2 rounded-md bg-gray-200 dark:bg-gray-700 dark:text-gray-100 text-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm font-medium"
         >
           Dashboard

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Icon from '../../components/AppIcon'
 import { signOut } from '../../utils/auth'
+<<<<<<< HEAD
 import { departments as deptData, courses as courseData, academicYears, faculty as facultyData, students as studentData } from '../../data/mockData'
 
 // Admin navigation modules (per slides)
@@ -10,6 +11,15 @@ const ADMIN_MENU = [
   { id: 'faculty', label: 'FACULTY', icon: 'Users' },
   { id: 'students', label: 'STUDENTS', icon: 'GraduationCap' },
   { id: 'reports', label: 'REPORTS', icon: 'FileBarChart2' },
+=======
+import { students as studentData, faculty as facultyData, departments as deptData, courses as courseData, academicYears } from '../../data/mockData'
+
+const ADMIN_MENU = [
+  { id: 'dashboard', label: 'DASHBOARD', icon: 'BarChart3' },
+  { id: 'faculty', label: 'FACULTY', icon: 'GraduationCap' },
+  { id: 'students', label: 'STUDENTS', icon: 'Users' },
+  { id: 'reports', label: 'REPORTS', icon: 'FileText' },
+>>>>>>> 0b4e87f ( frontend)
   { id: 'settings', label: 'SYSTEM\nSETTINGS', icon: 'Settings' }
 ]
 
@@ -21,6 +31,7 @@ export default function AdminDashboard() {
   const [isMobile, setIsMobile] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
 
+<<<<<<< HEAD
   // Local state using mockData (replace with API later)
   const [coursesState] = useState(courseData)
   const [departmentsState] = useState(deptData)
@@ -55,6 +66,43 @@ export default function AdminDashboard() {
     (!studentCourseFilter || s.course === studentCourseFilter) &&
     (!studentSearch || s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.studentNo.toLowerCase().includes(studentSearch.toLowerCase()))
   ), [studentsState, studentDeptFilter, studentCourseFilter, studentSearch])
+=======
+  // All static sample data removed. Real data should be fetched from API later.
+  const stats = useMemo(() => ({
+    totalStudents: studentData.length,
+    totalFaculty: facultyData.length,
+    totalCourses: courseData.length,
+    totalDepartments: deptData.length,
+    activeAcademicYear: '2025-2026',
+    pendingEnrollments: 0,
+    systemStatus: 'OK'
+  }), [])
+
+  // State for filters / search
+  const [facultyDeptFilter, setFacultyDeptFilter] = useState('')
+  const [facultySearch, setFacultySearch] = useState('')
+  const [studentDeptFilter, setStudentDeptFilter] = useState('')
+  const [studentCourseFilter, setStudentCourseFilter] = useState('')
+  const [studentSearch, setStudentSearch] = useState('')
+
+  const departments = deptData.map(d => d.code)
+  const courses = courseData.map(c => c.code)
+
+  const filteredFaculty = facultyData.filter(f => {
+    return (
+      (!facultyDeptFilter || f.dept === facultyDeptFilter) &&
+      (!facultySearch || f.name.toLowerCase().includes(facultySearch.toLowerCase()) || f.id.toLowerCase().includes(facultySearch.toLowerCase()))
+    )
+  })
+
+  const filteredStudents = studentData.filter(s => {
+    return (
+      (!studentDeptFilter || s.dept === studentDeptFilter) &&
+      (!studentCourseFilter || s.course === studentCourseFilter) &&
+      (!studentSearch || s.name.toLowerCase().includes(studentSearch.toLowerCase()) || s.studentNumber.includes(studentSearch))
+    )
+  })
+>>>>>>> 0b4e87f ( frontend)
 
   // Auto-collapse sidebar on mobile
   useEffect(() => {
@@ -83,13 +131,21 @@ export default function AdminDashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showProfileMenu])
 
+<<<<<<< HEAD
   const handleNavigation = (sectionId) => setActive(sectionId)
+=======
+  const handleNavigation = (sectionId) => {
+    // Only dashboard remains
+    setActive(sectionId)
+  }
+>>>>>>> 0b4e87f ( frontend)
 
   const handleLogout = () => {
     signOut()
     navigate('/login')
   }
 
+<<<<<<< HEAD
   const current = active === 'profile'
     ? { id: 'profile', label: 'MY PROFILE', icon: 'User' }
     : (ADMIN_MENU.find(m => m.id === active) || ADMIN_MENU[0])
@@ -109,6 +165,9 @@ export default function AdminDashboard() {
     if (!name) return
     setStudentsState(prev => [...prev, { id: Date.now(), studentNo: 'S-'+(prev.length+1).toString().padStart(3,'0'), name, course: studentCourseFilter || courses[0], department: studentDeptFilter || departments[0], yearLevel: 1, status: 'Active' }])
   }
+=======
+  const current = ADMIN_MENU.find(m => m.id === active) || ADMIN_MENU[0]
+>>>>>>> 0b4e87f ( frontend)
 
   return (
     <div className="h-screen bg-background flex relative">
@@ -174,7 +233,10 @@ export default function AdminDashboard() {
                     {item.label.replace('\n', ' ')}
                   </div>
                 )}
+<<<<<<< HEAD
                 {/* Removed faculty, students, reports modules */}
+=======
+>>>>>>> 0b4e87f ( frontend)
               </button>
             )
           })}
@@ -245,11 +307,26 @@ export default function AdminDashboard() {
               <div className="absolute right-0 top-full mt-2 w-48 sm:w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fade-in-up">
                 <div className="py-2">
                   <button
+<<<<<<< HEAD
                     onClick={() => { setActive('profile'); setShowProfileMenu(false); }}
                     className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-gray-50 hover:text-gray-800 transition-colors duration-150 group"
                   >
                     <Icon name="User" size={16} className="sm:text-lg text-gray-600 group-hover:text-gray-800" />
                     <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-800">My Profile</span>
+=======
+                    onClick={() => navigate('/lms-dashboard')}
+                    className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150 group"
+                  >
+                    <Icon name="User" size={16} className="sm:text-lg text-gray-600 group-hover:text-blue-600" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-blue-700">Switch to Student</span>
+                  </button>
+                  <button
+                    onClick={() => navigate('/teacher-dashboard')}
+                    className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-purple-50 hover:text-purple-700 transition-colors duration-150 group"
+                  >
+                    <Icon name="GraduationCap" size={16} className="sm:text-lg text-gray-600 group-hover:text-purple-600" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-purple-700">Switch to Teacher</span>
+>>>>>>> 0b4e87f ( frontend)
                   </button>
                   <div className="border-t border-gray-200 my-1"></div>
                   <button
@@ -267,6 +344,7 @@ export default function AdminDashboard() {
 
         {/* Content */}
         <main className="p-2 sm:p-4 md:p-6 relative">
+<<<<<<< HEAD
           {active === 'dashboard' && (
             <SectionWrapper title="System Overview" icon="BarChart3" subtitle="Total number of students & faculty, plus counts per course/department (charts placeholder)">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
@@ -305,11 +383,86 @@ export default function AdminDashboard() {
                     {filteredFaculty.length===0 && (
                       <tr><td className="px-3 py-6 text-center text-xs text-gray-400" colSpan={5}>No faculty found</td></tr>
                     )}
+=======
+          {/* DASHBOARD SECTION */}
+          {active === 'dashboard' && (
+            <div className="space-y-4 sm:space-y-6">
+              <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-600 text-white grid place-items-center rounded-full">
+                    <Icon name="Shield" size={24} className="sm:text-2xl" />
+                  </div>
+                  <div>
+                    <h1 className="text-lg sm:text-xl font-bold text-gray-900">Welcome to Admin Portal</h1>
+                    <p className="text-sm text-gray-600">System overview</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <StatCard icon="Users" label="Total Students" value={stats.totalStudents} color="blue" />
+                  <StatCard icon="GraduationCap" label="Total Faculty" value={stats.totalFaculty} color="green" />
+                  <StatCard icon="BookOpen" label="Total Courses" value={stats.totalCourses} color="yellow" />
+                  <StatCard icon="Building" label="Departments" value={stats.totalDepartments} color="purple" />
+                </div>
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <MiniCard icon="Calendar" label="Academic Year" value={stats.activeAcademicYear} />
+                  <MiniCard icon="AlertCircle" label="Pending Enrollments" value={stats.pendingEnrollments} color="orange" />
+                  <MiniCard icon="CheckCircle" label="System Status" value={stats.systemStatus} color="emerald" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* FACULTY SECTION */}
+          {active === 'faculty' && (
+            <SectionWrapper title="Faculty Management" icon="GraduationCap" subtitle="Add, edit, archive, filter & search faculty members">
+              <div className="flex flex-col md:flex-row gap-3 md:items-end mb-4">
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-600">Department</label>
+                    <select value={facultyDeptFilter} onChange={e=>setFacultyDeptFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
+                      <option value="">All</option>
+                      {departments.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1 sm:col-span-2">
+                    <label className="text-xs font-medium text-gray-600">Search</label>
+                    <input value={facultySearch} onChange={e=>setFacultySearch(e.target.value)} placeholder="Search faculty" className="h-9 border border-gray-300 rounded px-2 text-sm" />
+                  </div>
+                </div>
+                <button className="h-9 px-4 bg-blue-600 text-white rounded text-sm whitespace-nowrap">Add Faculty</button>
+              </div>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {['ID','Name','Department','Status','Actions'].map(col => <th key={col} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{col}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredFaculty.length === 0 && (
+                      <tr><td colSpan={5} className="text-center text-gray-400 text-xs py-6">No faculty records</td></tr>
+                    )}
+                    {filteredFaculty.map(f => (
+                      <tr key={f.id} className="border-t border-gray-100 hover:bg-gray-50">
+                        <td className="px-3 py-2 text-xs font-medium">{f.id}</td>
+                        <td className="px-3 py-2 text-xs">{f.name}</td>
+                        <td className="px-3 py-2 text-xs">{f.dept}</td>
+                        <td className="px-3 py-2 text-xs">
+                          <StatusBadge status={f.status} />
+                        </td>
+                        <td className="px-3 py-2 text-xs flex gap-2">
+                          <button className="text-blue-600 hover:underline">Edit</button>
+                          <button className="text-yellow-600 hover:underline">Archive</button>
+                        </td>
+                      </tr>
+                    ))}
+>>>>>>> 0b4e87f ( frontend)
                   </tbody>
                 </table>
               </div>
             </SectionWrapper>
           )}
+<<<<<<< HEAD
           {active === 'students' && (
             <SectionWrapper title="Students" icon="UserRound" subtitle="Add, edit, archive, filter and search students">
               <div className="flex flex-wrap gap-2 mb-4 items-center">
@@ -336,11 +489,65 @@ export default function AdminDashboard() {
                     {filteredStudents.length===0 && (
                       <tr><td className="px-3 py-6 text-center text-xs text-gray-400" colSpan={7}>No students found</td></tr>
                     )}
+=======
+
+          {/* STUDENTS SECTION */}
+          {active === 'students' && (
+            <SectionWrapper title="Student Management" icon="Users" subtitle="Add, edit, archive, filter & search students">
+              <div className="flex flex-col md:flex-row gap-3 md:items-end mb-4">
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-600">Department</label>
+                    <select value={studentDeptFilter} onChange={e=>setStudentDeptFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
+                      <option value="">All</option>
+                      {departments.map(d => <option key={d} value={d}>{d}</option>)}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-medium text-gray-600">Course</label>
+                    <select value={studentCourseFilter} onChange={e=>setStudentCourseFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
+                      <option value="">All</option>
+                      {courses.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1 sm:col-span-2">
+                    <label className="text-xs font-medium text-gray-600">Search</label>
+                    <input value={studentSearch} onChange={e=>setStudentSearch(e.target.value)} placeholder="Search student" className="h-9 border border-gray-300 rounded px-2 text-sm" />
+                  </div>
+                </div>
+                <button className="h-9 px-4 bg-blue-600 text-white rounded text-sm whitespace-nowrap">Add Student</button>
+              </div>
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      {['Student #','Name','Course','Dept','Status','Actions'].map(col => <th key={col} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{col}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredStudents.length === 0 && (
+                      <tr><td colSpan={6} className="text-center text-gray-400 text-xs py-6">No student records</td></tr>
+                    )}
+                    {filteredStudents.map(s => (
+                      <tr key={s.studentNumber} className="border-t border-gray-100 hover:bg-gray-50">
+                        <td className="px-3 py-2 text-xs font-medium">{s.studentNumber}</td>
+                        <td className="px-3 py-2 text-xs">{s.name}</td>
+                        <td className="px-3 py-2 text-xs">{s.course}</td>
+                        <td className="px-3 py-2 text-xs">{s.dept}</td>
+                        <td className="px-3 py-2 text-xs"><StatusBadge status={s.status} /></td>
+                        <td className="px-3 py-2 text-xs flex gap-2">
+                          <button className="text-blue-600 hover:underline">Edit</button>
+                          <button className="text-yellow-600 hover:underline">Archive</button>
+                        </td>
+                      </tr>
+                    ))}
+>>>>>>> 0b4e87f ( frontend)
                   </tbody>
                 </table>
               </div>
             </SectionWrapper>
           )}
+<<<<<<< HEAD
           {active === 'reports' && (
             <SectionWrapper title="Reports" icon="FileBarChart2" subtitle="Generate filtered student & faculty counts (placeholder)">
               <div className="grid md:grid-cols-2 gap-6">
@@ -350,11 +557,48 @@ export default function AdminDashboard() {
               <p className="text-[10px] text-gray-400 mt-4">Export / print functionality to be implemented.</p>
             </SectionWrapper>
           )}
+=======
+
+          {/* REPORTS SECTION */}
+          {active === 'reports' && (
+            <SectionWrapper title="Reports" icon="FileText" subtitle="Generate filtered reports for students & faculty">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-sm mb-3 flex items-center gap-2"><Icon name="Users" size={16} /> Student Reports</h3>
+                  <div className="flex flex-col gap-2 mb-3">
+                    <select className="h-9 border border-gray-300 rounded px-2 text-sm">
+                      <option value="">Course (All)</option>
+                      {courses.map(c => <option key={c}>{c}</option>)}
+                    </select>
+                    <select className="h-9 border border-gray-300 rounded px-2 text-sm">
+                      <option value="">Department (All)</option>
+                      {departments.map(d => <option key={d}>{d}</option>)}
+                    </select>
+                  </div>
+                  <button className="h-9 px-4 bg-blue-600 text-white rounded text-sm">Generate</button>
+                </div>
+                <div className="border border-gray-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-sm mb-3 flex items-center gap-2"><Icon name="GraduationCap" size={16} /> Faculty Reports</h3>
+                  <div className="flex flex-col gap-2 mb-3">
+                    <select className="h-9 border border-gray-300 rounded px-2 text-sm">
+                      <option value="">Department (All)</option>
+                      {departments.map(d => <option key={d}>{d}</option>)}
+                    </select>
+                  </div>
+                  <button className="h-9 px-4 bg-blue-600 text-white rounded text-sm">Generate</button>
+                </div>
+              </div>
+            </SectionWrapper>
+          )}
+
+          {/* SYSTEM SETTINGS SECTION */}
+>>>>>>> 0b4e87f ( frontend)
           {active === 'settings' && (
             <SectionWrapper title="System Settings" icon="Settings" subtitle="Manage courses, departments & academic years">
               <SettingsTabs />
             </SectionWrapper>
           )}
+<<<<<<< HEAD
           {active === 'profile' && (
             <SectionWrapper title="My Profile" icon="User" subtitle="Edit signed in profile or logout">
               <div className="space-y-4 max-w-md">
@@ -377,6 +621,11 @@ export default function AdminDashboard() {
               </div>
             </SectionWrapper>
           )}
+=======
+
+            {/* PROFILE SECTION */}
+          {/* Profile section removed per request */}
+>>>>>>> 0b4e87f ( frontend)
         </main>
       </div>
     </div>
@@ -589,6 +838,7 @@ function StatusBadge({ status }) {
     <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide ${active ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'}`}>{status || '--'}</span>
   )
 }
+<<<<<<< HEAD
 
 // Simple chart placeholders (CSS bars)
 function ChartPlaceholder({ title, labels, values }) {
@@ -612,3 +862,5 @@ function ChartPlaceholder({ title, labels, values }) {
 }
 
 function ReportBlock(props) { return <ChartPlaceholder {...props} /> }
+=======
+>>>>>>> 0b4e87f ( frontend)
