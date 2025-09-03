@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: fsuu-management
+    env: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        sync: false   # Set this in Render dashboard
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://fsuu-management.onrender.com
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: fsuu-management-mysql.render.com   # Your Render MySQL host
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: fsuu_management                    # Your DB name
+      - key: DB_USERNAME
+        value: fsuu_user                          # Your DB user
+      - key: DB_PASSWORD
+        value: fsuu_password123                   # Your DB password
