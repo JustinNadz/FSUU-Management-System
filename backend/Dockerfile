@@ -1,7 +1,7 @@
 # Use official PHP 8.2 image with Apache
 FROM php:8.2-apache
 
-# Install system dependencies and PHP extensions (including PostgreSQL)
+# Install system dependencies and PostgreSQL support
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
@@ -18,14 +18,14 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions separately for better reliability
+# Install PHP extensions with explicit PostgreSQL support
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Install PostgreSQL extensions with multiple approaches for maximum compatibility
+# Install PostgreSQL extensions with multiple methods for maximum compatibility
 RUN docker-php-ext-configure pgsql --with-pgsql=/usr \
     && docker-php-ext-install pdo_pgsql pgsql
 
-# Alternative installation method if the above fails
+# Alternative installation if the above fails
 RUN if ! php -m | grep -q pdo_pgsql; then \
         echo "Installing PostgreSQL extensions via alternative method..."; \
         docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql; \
@@ -63,7 +63,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Point Apache to Laravel's public folder
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
-# Create startup script
+# Create startup script with comprehensive diagnostics
 RUN echo '#!/bin/bash\n\
 echo "🚀 Starting Laravel application..."\n\
 echo "📁 Checking .env file..."\n\
@@ -76,11 +76,15 @@ php -r "if (extension_loaded('pdo_pgsql')) { echo '✅ pdo_pgsql extension is lo
 php -r "if (extension_loaded('pgsql')) { echo '✅ pgsql extension is loaded'; } else { echo '❌ pgsql extension is NOT loaded'; }"\n\
 echo "🧪 Running comprehensive database test..."\n\
 php /var/www/html/test-postgres.php\n\
+echo "🔧 Force loading extensions..."\n\
+php /var/www/html/load-extensions.php\n\
 echo "⚙️ Caching configuration..."\n\
 php artisan config:cache\n\
 php artisan route:cache\n\
 echo "🗄️ Running migrations..."\n\
 php artisan migrate --force || echo "⚠️ Migration failed, continuing..."\n\
+echo "🔍 Final verification..."\n\
+php -r "if (!extension_loaded('pdo_pgsql')) { echo '❌ CRITICAL: pdo_pgsql still not loaded!'; exit(1); } else { echo '✅ pdo_pgsql confirmed loaded'; }"\n\
 echo "🌐 Starting Apache..."\n\
 apache2-foreground' > /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
