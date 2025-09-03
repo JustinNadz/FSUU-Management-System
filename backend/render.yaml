@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: fsuu-management
+    name: fsuu-management-system
     env: docker
     rootDir: backend
     plan: free
@@ -8,20 +8,26 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false   # Set this in Render dashboard
+        value: base64:XWHx8+c+7xCLI6MgECP0mRWQfCu9iDoIjVmwifcXmwA=
       - key: APP_DEBUG
         value: false
       - key: APP_URL
-        value: https://fsuu-management.onrender.com
+        value: https://fsuu-management-system-1.onrender.com
+      - key: FRONTEND_URL
+        value: https://fsuu.vercel.app
       - key: DB_CONNECTION
-        value: mysql
+        value: pgsql
       - key: DB_HOST
-        value: fsuu-management-mysql.render.com   # Your Render MySQL host
+        value: db.aehkeidsmaqwoqprwpme.supabase.co
       - key: DB_PORT
-        value: 3306
+        value: 5432
       - key: DB_DATABASE
-        value: fsuu_management                    # Your DB name
+        value: postgres
       - key: DB_USERNAME
-        value: fsuu_user                          # Your DB user
+        value: postgres
       - key: DB_PASSWORD
-        value: fsuu_password123                   # Your DB password
+        value: Anonymous141
+      - key: SANCTUM_STATEFUL_DOMAINS
+        value: fsuu-management-system-1.onrender.com,fsuu.vercel.app
+      - key: SESSION_DOMAIN
+        value: fsuu-management-system-1.onrender.com
