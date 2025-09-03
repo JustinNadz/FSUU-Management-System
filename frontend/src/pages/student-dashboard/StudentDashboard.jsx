@@ -199,9 +199,60 @@ export default function StudentDashboard() {
             </Card>
           )}
           {active==='profile' && (
-            <Card title="My Profile" subtitle="Edit signed in profile or logout">
-              <StudentProfile user={user} onLogout={handleLogout} />
-            </Card>
+            <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">My Profile</h2>
+              <StudentProfile user={user} setActive={setActive} />
+            </div>
+          )}
+
+          {/* Change Password Section */}
+          {active==='change-password' && (
+            <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h2>
+              <div className="space-y-4 max-w-sm">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                  <input 
+                    type="password"
+                    placeholder="Enter current password"
+                    className="w-full h-9 px-3 border rounded text-xs" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                  <input 
+                    type="password"
+                    placeholder="Enter new password"
+                    className="w-full h-9 px-3 border rounded text-xs" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                  <input 
+                    type="password"
+                    placeholder="Confirm new password"
+                    className="w-full h-9 px-3 border rounded text-xs" 
+                  />
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <button 
+                    onClick={() => setActive('profile')}
+                    className="h-9 px-4 bg-gray-600 text-white rounded text-xs hover:bg-gray-700 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={() => {
+                      alert('Password changed successfully!');
+                      setActive('profile');
+                    }}
+                    className="h-9 px-4 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
+                  >
+                    Update Password
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </main>
       </div>
@@ -242,8 +293,8 @@ function Stat({ icon, label, value, color }) {
   )
 }
 
-function StudentProfile({ user, onLogout }) {
-  const [profile, setProfile] = useState({ name: user?.name || '', email: user?.email || '', password: '' })
+function StudentProfile({ user, setActive }) {
+  const [profile, setProfile] = useState({ name: user?.name || '', email: user?.email || '' })
   const update = (k,v) => setProfile(p=>({...p,[k]:v}))
   const save = () => {
     const auth = { ...user, name: profile.name, email: profile.email }
@@ -258,33 +309,28 @@ function StudentProfile({ user, onLogout }) {
   return (
     <div className="space-y-4 max-w-sm">
       <div>
-        <label className="block text-[11px] font-medium mb-1">Name</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
         <input value={profile.name} onChange={e=>update('name', e.target.value)} className="w-full h-9 px-3 border rounded text-xs" />
       </div>
       <div>
-        <label className="block text-[11px] font-medium mb-1">Email</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
         <input value={profile.email} onChange={e=>update('email', e.target.value)} className="w-full h-9 px-3 border rounded text-xs" />
       </div>
       <div>
-        <label className="block text-[11px] font-medium mb-1">Student Number</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Student Number</label>
         <input disabled value={student?.studentNumber || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
       </div>
       <div>
-        <label className="block text-[11px] font-medium mb-1">Course</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Course</label>
         <input disabled value={course?.name || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
       </div>
       <div>
-        <label className="block text-[11px] font-medium mb-1">Status</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
         <input disabled value={student?.status || ''} className="w-full h-9 px-3 border rounded text-xs bg-gray-50" />
       </div>
-      <div>
-        <label className="block text-[11px] font-medium mb-1">Password</label>
-        <input type="password" value={profile.password} onChange={e=>update('password', e.target.value)} placeholder="********" className="w-full h-9 px-3 border rounded text-xs" />
-        <p className="text-[10px] text-gray-400 mt-1">Password change not persisted in demo.</p>
-      </div>
-      <div className="flex gap-2">
-        <button onClick={save} className="h-9 px-4 bg-blue-600 text-white rounded text-xs">Save Changes</button>
-        <button onClick={onLogout} className="h-9 px-4 bg-red-600 text-white rounded text-xs">Logout</button>
+      <div className="flex gap-2 pt-4">
+        <button onClick={save} className="h-9 px-4 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors">Save Changes</button>
+        <button onClick={() => setActive('change-password')} className="h-9 px-4 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors">Change Password</button>
       </div>
     </div>
   )

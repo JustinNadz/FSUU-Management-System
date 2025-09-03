@@ -229,18 +229,11 @@ export default function AdminDashboard() {
               <div className="absolute right-0 top-full mt-2 w-48 sm:w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 animate-fade-in-up">
                 <div className="py-2">
                   <button
-                    onClick={() => navigate('/lms-dashboard')}
-                    className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150 group"
+                    onClick={() => { setActive('profile'); setShowProfileMenu(false) }}
+                    className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-gray-50 hover:text-gray-800 transition-colors duration-150 group"
                   >
-                    <Icon name="User" size={16} className="sm:text-lg text-gray-600 group-hover:text-blue-600" />
-                    <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-blue-700">Switch to Student</span>
-                  </button>
-                  <button
-                    onClick={() => navigate('/teacher-dashboard')}
-                    className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-left hover:bg-purple-50 hover:text-purple-700 transition-colors duration-150 group"
-                  >
-                    <Icon name="GraduationCap" size={16} className="sm:text-lg text-gray-600 group-hover:text-purple-600" />
-                    <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-purple-700">Switch to Teacher</span>
+                    <Icon name="User" size={16} className="sm:text-lg text-gray-600 group-hover:text-gray-800" />
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-800">My Profile</span>
                   </button>
                   <div className="border-t border-gray-200 my-1"></div>
                   <button
@@ -429,6 +422,97 @@ export default function AdminDashboard() {
             <SectionWrapper title="System Settings" icon="Settings" subtitle="Manage courses, departments & academic years">
               <SettingsTabs />
             </SectionWrapper>
+          )}
+
+          {/* PROFILE SECTION */}
+          {active === 'profile' && (
+            <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">My Profile</h2>
+              <div className="space-y-4 max-w-sm">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input 
+                    value="SYSTEM ADMINISTRATOR" 
+                    disabled 
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Admin ID</label>
+                  <input 
+                    value="admin" 
+                    disabled 
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                  <input 
+                    value="Administrator" 
+                    disabled 
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  />
+                </div>
+                <div className="pt-4">
+                  <button 
+                    onClick={() => setActive('change-password')}
+                    className="h-9 px-4 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
+                  >
+                    Change Password
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CHANGE PASSWORD SECTION */}
+          {active === 'change-password' && (
+            <div className="bg-white border border-border rounded-lg p-4 sm:p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h2>
+              <div className="space-y-4 max-w-sm">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                  <input 
+                    type="password"
+                    placeholder="Enter current password"
+                    className="w-full h-9 px-3 border rounded text-xs" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                  <input 
+                    type="password"
+                    placeholder="Enter new password"
+                    className="w-full h-9 px-3 border rounded text-xs" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                  <input 
+                    type="password"
+                    placeholder="Confirm new password"
+                    className="w-full h-9 px-3 border rounded text-xs" 
+                  />
+                </div>
+                <div className="flex gap-2 pt-4">
+                  <button 
+                    onClick={() => setActive('profile')}
+                    className="h-9 px-4 bg-gray-600 text-white rounded text-xs hover:bg-gray-700 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={() => {
+                      alert('Password changed successfully!');
+                      setActive('profile');
+                    }}
+                    className="h-9 px-4 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
+                  >
+                    Update Password
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </main>
       </div>

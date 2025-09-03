@@ -106,14 +106,13 @@ export default function Login() {
               </div>
             )}
             <Form.Item
-              label="Student Number, Teacher ID, or Admin ID"
+              label="User"
               name="identifier"
-              rules={[{ required: true, message: 'Please enter your student number, teacher ID, or admin ID' }]}
+              rules={[{ required: true, message: 'Please enter your user ID' }]}
               className="animate-fade-in-up animation-delay-600"
             >
               <Input 
-                inputMode="numeric" 
-                placeholder="e.g. 2024-000123" 
+                placeholder="e.g. T-001" 
                 className="transition-all duration-300 hover:shadow-md focus:shadow-lg" 
               />
             </Form.Item>
