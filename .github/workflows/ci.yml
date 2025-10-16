@@ -28,7 +28,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - name: Install deps
-        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
+        run: |
+          composer install --no-interaction --prefer-dist --no-progress --no-scripts || \
+          composer update --no-interaction --prefer-dist --no-progress --no-scripts
       - name: Lint (basic)
         run: php -l app/Http/Kernel.php || true
 
