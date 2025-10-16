@@ -36,7 +36,10 @@ export default api
 // CSRF helper for Sanctum cookie-based auth
 export async function ensureCsrfCookie() {
   try {
-    await axios.get('/sanctum/csrf-cookie', { withCredentials: true })
+    const base = (api.defaults.baseURL || '').replace(/\/$/, '')
+    const root = base.endsWith('/api') ? base.slice(0, -4) : base
+    const csrfUrl = `${root}/sanctum/csrf-cookie`
+    await axios.get(csrfUrl, { withCredentials: true })
   } catch (e) {
     if (import.meta.env.DEV) console.warn('CSRF init failed', e?.response || e)
     throw e
