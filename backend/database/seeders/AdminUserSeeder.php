@@ -15,6 +15,7 @@ class AdminUserSeeder extends Seeder
             $user->update([
                 'name' => 'admin',
                 'role' => 'admin',
+                'status' => 'Active',
                 'password' => Hash::make('admin123'),
             ]);
         } else {
@@ -22,6 +23,7 @@ class AdminUserSeeder extends Seeder
                 'name' => 'admin',
                 'email' => 'admin@example.com',
                 'role' => 'admin',
+                'status' => 'Active',
                 'password' => Hash::make('admin123'),
             ]);
         }

@@ -13,7 +13,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register Sentry if DSN provided
+        if (!empty(env('SENTRY_LARAVEL_DSN'))) {
+            $this->app->register(\Sentry\Laravel\ServiceProvider::class);
+        }
+        // Conditionally register Telescope wrapper
+        $this->app->register(\App\Providers\TelescopeServiceProvider::class);
     }
 
     /**

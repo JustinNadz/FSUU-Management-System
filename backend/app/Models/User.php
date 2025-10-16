@@ -23,6 +23,10 @@ class User extends Authenticatable
         'role',
         'employee_no',
         'student_id',
+        'department_code',
+        'course_code',
+        'status',
+        'avatar_url',
         'password',
     ];
 

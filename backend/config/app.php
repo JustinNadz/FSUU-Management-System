@@ -175,6 +175,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Telescope (dev only; enabled via env)
+        // Laravel\Telescope\TelescopeServiceProvider::class,
+        // App\Providers\TelescopeServiceProvider::class,
+
     ],
 
     /*

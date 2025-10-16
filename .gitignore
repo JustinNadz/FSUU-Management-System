@@ -1,11 +1,13 @@
 /vendor
 /node_modules
 /frontend/node_modules
+/frontend/dist
 /public/storage
 /storage/*.key
 /.idea
 /.vscode
 /.env
+/.env.*
 Homestead.yaml
 Homestead.json
 .phpunit.result.cache

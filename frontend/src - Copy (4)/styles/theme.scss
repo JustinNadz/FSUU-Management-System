@@ -1,0 +1,21 @@
+@use "sass:map";
+
+// Ant Design variable overrides (v5 uses CSS-in-JS tokens; keep some globals)
+:root {
+  --brand-primary: #2b49ff;
+}
+
+body {
+  // Fine tune base typography with Sass variable for easy theming later
+  $font-stack: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: $font-stack;
+}
+
+// Utility class examples to complement Tailwind
+.card-elevated {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(2, 8, 23, .12);
+  background: #ffffff;
+}
+

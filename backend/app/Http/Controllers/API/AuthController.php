@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -112,13 +113,37 @@ class AuthController extends Controller
             }
         }
 
+        // Ensure correct admin role if logging in as admin identifier FIRST
+        try {
+            $identifierLower = strtolower((string) $identifier);
+            if ($identifierLower === 'admin' || strtolower((string)$user->name) === 'admin' || strtolower((string)$user->email) === 'admin@example.com') {
+                if ($user->role !== 'admin') {
+                    $user->role = 'admin';
+                    $user->save();
+                }
+                // Force admin status Active
+                if (strcasecmp((string)($user->status ?? 'Active'), 'Active') !== 0) {
+                    $user->status = 'Active';
+                    $user->save();
+                }
+            }
+        } catch (\Throwable $e) {}
+
+        // Block login for inactive accounts (non-admin only) AFTER potential admin promotion
+        try {
+            $statusValue = (string)($user->status ?? 'Active');
+            if (strcasecmp($statusValue, 'Active') !== 0 && strtolower((string)$user->role) !== 'admin') {
+                return response()->json(['message' => 'Account is inactive. Please contact the administrator.'], 403);
+            }
+        } catch (\Throwable $e) {}
+
         $token = $user->createToken('spa')->plainTextToken;
         Log::info('Login success', [
             'user_id' => $user->id,
             'identifier_used' => $identifier,
             'ip' => $request->ip(),
         ]);
-        return response()->json(['token' => $token, 'user' => $user]);
+        return response()->json(['token' => $token, 'user' => new UserResource($user)]);
     }
 
     public function me(Request $request)

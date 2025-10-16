@@ -10,6 +10,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
+        "sentry/sentry-laravel": "^3.17",
         "laravel/tinker": "^2.5"
     },
     "require-dev": {
@@ -18,7 +19,8 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
-        "phpunit/phpunit": "^9.5.10"
+        "phpunit/phpunit": "^9.5.10",
+        "laravel/telescope": "^4.16"
     },
     "autoload": {
         "psr-4": {
