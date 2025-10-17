@@ -29,4 +29,4 @@
 - Backend: optional Sentry (`SENTRY_LARAVEL_DSN`), dev-only Telescope (toggle `TELESCOPE_ENABLED=true`).
 - Frontend: optional Sentry (`VITE_SENTRY_DSN`).
 
-
+yawa
