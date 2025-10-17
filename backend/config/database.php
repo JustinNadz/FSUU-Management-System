@@ -67,7 +67,8 @@ return [
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            // Force IPv4 resolution when possible to avoid IPv6-only routes
+            'host' => env('DB_HOST_IPV4', gethostbyname(env('DB_HOST', '127.0.0.1'))),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
