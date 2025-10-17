@@ -64,7 +64,7 @@ EXPOSE 8000
 
 # Entry script: use Render's $PORT if provided; generate key if missing; cache config/routes; run migrations (ignore if DB not ready); start server
 CMD sh -lc "RENDER_PORT=\${PORT:-8000} \
- && php artisan key:generate --force || true \
+ && if [ -z \"\${APP_KEY}\" ] && [ -f .env ]; then php artisan key:generate --force; fi \
  && php artisan config:cache \
  && php artisan route:cache || true \
  && php artisan migrate --force || true \
