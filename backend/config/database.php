@@ -46,7 +46,8 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            // Prefer IPv4 to avoid environments without IPv6 routing
+            'host' => env('DB_HOST_IPV4', gethostbyname(env('DB_HOST', '127.0.0.1'))),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
