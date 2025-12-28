@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Icon from '../../components/AppIcon'
 import { signOut } from '../../utils/auth'
 import api from '../../utils/api'
-import { students as studentData, faculty as facultyData, departments as deptData, courses as courseData, academicYears } from '../../data/mockData'
+// Mock data kept as fallback but primarily using API data now
 
 const ADMIN_MENU = [
   { id: 'dashboard', label: 'DASHBOARD', icon: 'BarChart3' },
@@ -114,8 +114,30 @@ export default function AdminDashboard() {
   const [studentsPage, setStudentsPage] = useState(1)
   const [studentsPageSize, setStudentsPageSize] = useState(10)
 
-  const departments = deptData.map(d => d.code)
-  const courses = courseData.map(c => c.code)
+  // Live departments and courses from API
+  const [departments, setDepartments] = useState([])
+  const [courses, setCourses] = useState([])
+
+  // Fetch departments and courses when needed
+  const refreshLookups = async () => {
+    try {
+      const [deptRes, courseRes] = await Promise.all([
+        api.get('/admin/departments').catch(() => ({ data: [] })),
+        api.get('/admin/courses').catch(() => ({ data: [] })),
+      ])
+      const depts = Array.isArray(deptRes.data) ? deptRes.data : []
+      const crs = Array.isArray(courseRes.data) ? courseRes.data : []
+      setDepartments(depts.map(d => d.code))
+      setCourses(crs.map(c => c.code))
+    } catch { }
+  }
+
+  // Refresh lookups when navigating to sections that need them
+  useEffect(() => {
+    if (['faculty', 'students', 'settings'].includes(active)) {
+      refreshLookups()
+    }
+  }, [active])
 
   // Field resolvers (robust against varying API shapes)
   const resolveFacultyId = (r) => {
