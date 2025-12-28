@@ -29,9 +29,9 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     let mounted = true
-    ;(async () => {
-      try { const { data } = await api.get('/profile/me'); if (!mounted) return; if (data?.avatar_url) setProfileImage(data.avatar_url) } catch {}
-    })()
+      ; (async () => {
+        try { const { data } = await api.get('/profile/me'); if (!mounted) return; if (data?.avatar_url) setProfileImage(data.avatar_url) } catch { }
+      })()
     return () => { mounted = false }
   }, [])
 
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
         totalCourses: extractCount(cRes.data),
         totalDepartments: extractCount(dRes.data),
       }))
-    } catch {}
+    } catch { }
   }
 
   useEffect(() => { refreshCounts() }, [])
@@ -168,10 +168,12 @@ export default function AdminDashboard() {
       if (active !== 'faculty') return
       setLoadingList(true)
       try {
-        const { data } = await api.get('/admin/faculty', { params: {
-          department: facultyDeptFilter || undefined,
-          search: facultySearch || undefined,
-        }})
+        const { data } = await api.get('/admin/faculty', {
+          params: {
+            department: facultyDeptFilter || undefined,
+            search: facultySearch || undefined,
+          }
+        })
         const arr = extractRows(data)
         setFaculty(arr)
         // Reset page if current page is out of range
@@ -189,11 +191,13 @@ export default function AdminDashboard() {
       if (active !== 'students') return
       setLoadingList(true)
       try {
-        const { data } = await api.get('/admin/students', { params: {
-          department: studentDeptFilter || undefined,
-          course: studentCourseFilter || undefined,
-          search: studentSearch || undefined,
-        }})
+        const { data } = await api.get('/admin/students', {
+          params: {
+            department: studentDeptFilter || undefined,
+            course: studentCourseFilter || undefined,
+            search: studentSearch || undefined,
+          }
+        })
         const arr = extractRows(data)
         setStudents(arr)
         const maxPage = Math.max(1, Math.ceil((arr?.length || 0) / studentsPageSize))
@@ -402,11 +406,9 @@ export default function AdminDashboard() {
 
       {/* Sidebar */}
       <aside
-        className={`${
-          sidebarCollapsed ? 'w-16' : 'w-56 md:w-60'
-        } ${
-          isMobile && !sidebarCollapsed ? 'fixed left-0 top-0 z-40' : 'relative'
-        } text-white flex flex-col border-r border-white/10 sticky top-0 h-screen transition-all duration-300`}
+        className={`${sidebarCollapsed ? 'w-16' : 'w-56 md:w-60'
+          } ${isMobile && !sidebarCollapsed ? 'fixed left-0 top-0 z-40' : 'relative'
+          } text-white flex flex-col border-r border-white/10 sticky top-0 h-screen transition-all duration-300`}
         style={{
           backgroundImage:
             'linear-gradient(180deg, #1E4DB3 0%, #1C3F9A 35%, #24308F 60%, #2B1E88 100%)',
@@ -417,11 +419,10 @@ export default function AdminDashboard() {
           <img
             src="/images/326319243_1186313552001605_2507428058393999247_n-removebg-preview.png"
             alt="FSUU"
-            className={`${
-              sidebarCollapsed
+            className={`${sidebarCollapsed
                 ? 'w-16 h-16'
                 : 'w-56 md:w-64'
-            } object-contain transition-all duration-300`}
+              } object-contain transition-all duration-300`}
             style={{ clipPath: 'inset(0 0 26% 0)' }}
           />
         </div>
@@ -435,9 +436,8 @@ export default function AdminDashboard() {
                 key={item.id}
                 onClick={() => handleNavigation(item.id)}
                 disabled={loading}
-                className={`w-full text-left ${sidebarCollapsed ? 'px-2 py-3' : 'px-3 py-3'} rounded-lg flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-200 border-l-2 group relative ${
-                  isActive ? 'bg-white/20 border-white shadow-sm' : 'border-transparent hover:bg-white/10 hover:border-white/30'
-                } ${loading ? 'opacity-50' : ''}`}
+                className={`w-full text-left ${sidebarCollapsed ? 'px-2 py-3' : 'px-3 py-3'} rounded-lg flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-200 border-l-2 group relative ${isActive ? 'bg-white/20 border-white shadow-sm' : 'border-transparent hover:bg-white/10 hover:border-white/30'
+                  } ${loading ? 'opacity-50' : ''}`}
                 title={sidebarCollapsed ? item.label.replace('\n', ' ') : ''}
               >
                 <Icon name={item.icon} size={18} className="opacity-90 text-white flex-shrink-0" />
@@ -465,9 +465,8 @@ export default function AdminDashboard() {
           <button
             onClick={handleLogout}
             disabled={loading}
-            className={`w-full text-left ${sidebarCollapsed ? 'px-2 py-3' : 'px-3 py-3'} rounded-lg flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-200 border-l-2 border-transparent hover:bg-red-500/20 hover:border-red-400 group relative ${
-              loading ? 'opacity-50' : ''
-            }`}
+            className={`w-full text-left ${sidebarCollapsed ? 'px-2 py-3' : 'px-3 py-3'} rounded-lg flex items-center ${sidebarCollapsed ? 'justify-center' : 'gap-3'} transition-all duration-200 border-l-2 border-transparent hover:bg-red-500/20 hover:border-red-400 group relative ${loading ? 'opacity-50' : ''
+              }`}
             title={sidebarCollapsed ? 'Logout' : ''}
           >
             <Icon name="LogOut" size={18} className="opacity-90 text-red-300 flex-shrink-0" />
@@ -485,9 +484,8 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main */}
-      <div className={`flex-1 flex flex-col min-w-0 h-screen overflow-y-auto ${
-        isMobile && !sidebarCollapsed ? 'ml-0' : ''
-      }`}>
+      <div className={`flex-1 flex flex-col min-w-0 h-screen overflow-y-auto ${isMobile && !sidebarCollapsed ? 'ml-0' : ''
+        }`}>
         {/* Topbar */}
         <header className="h-14 bg-white/95 backdrop-blur border-b border-border sticky top-0 z-10 px-3 sm:px-4 md:px-6 flex items-center justify-between">
           <div className="flex items-center gap-1 sm:gap-2 text-primary">
@@ -514,9 +512,9 @@ export default function AdminDashboard() {
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-red-600 text-white grid place-items-center text-xs font-medium overflow-hidden">
                 {profileImage ? (
-                  <img 
-                    src={profileImage} 
-                    alt="Profile" 
+                  <img
+                    src={profileImage}
+                    alt="Profile"
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -589,14 +587,14 @@ export default function AdminDashboard() {
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-medium text-gray-600">Department</label>
-                    <select value={facultyDeptFilter} onChange={e=>setFacultyDeptFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
+                    <select value={facultyDeptFilter} onChange={e => setFacultyDeptFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
                       <option value="">All</option>
                       {departments.map(d => <option key={d} value={d}>{d}</option>)}
                     </select>
                   </div>
                   <div className="flex flex-col gap-1 sm:col-span-2">
                     <label className="text-xs font-medium text-gray-600">Search</label>
-                    <input value={facultySearch} onChange={e=>setFacultySearch(e.target.value)} placeholder="Search faculty" className="h-9 border border-gray-300 rounded px-2 text-sm" />
+                    <input value={facultySearch} onChange={e => setFacultySearch(e.target.value)} placeholder="Search faculty" className="h-9 border border-gray-300 rounded px-2 text-sm" />
                   </div>
                 </div>
                 <button onClick={addFaculty} className="h-9 px-4 bg-blue-600 text-white rounded text-sm whitespace-nowrap">Add Faculty</button>
@@ -605,7 +603,7 @@ export default function AdminDashboard() {
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50">
                     <tr>
-                      {['ID','Name','Department','Status','Actions'].map(col => <th key={col} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{col}</th>)}
+                      {['ID', 'Name', 'Department', 'Status', 'Actions'].map(col => <th key={col} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{col}</th>)}
                     </tr>
                   </thead>
                   <tbody>
@@ -615,8 +613,8 @@ export default function AdminDashboard() {
                     {!loadingList && faculty.length === 0 && (
                       <tr><td colSpan={5} className="text-center text-gray-400 text-xs py-6">No faculty records</td></tr>
                     )}
-                    {!loadingList && faculty.slice((facultyPage-1)*facultyPageSize, (facultyPage-1)*facultyPageSize + facultyPageSize).map((f, i) => (
-                      <tr key={(f && (f.id || f.email || f.employee_no)) ?? `fac-${(facultyPage-1)*facultyPageSize + i}`} className="border-t border-gray-100 hover:bg-gray-50">
+                    {!loadingList && faculty.slice((facultyPage - 1) * facultyPageSize, (facultyPage - 1) * facultyPageSize + facultyPageSize).map((f, i) => (
+                      <tr key={(f && (f.id || f.email || f.employee_no)) ?? `fac-${(facultyPage - 1) * facultyPageSize + i}`} className="border-t border-gray-100 hover:bg-gray-50">
                         <td className="px-3 py-2 text-xs font-medium">{resolveFacultyId(f) || '-'}</td>
                         <td className="px-3 py-2 text-xs">{resolveFacultyName(f) || '-'}</td>
                         <td className="px-3 py-2 text-xs">{resolveDept(f) || '-'}</td>
@@ -642,13 +640,13 @@ export default function AdminDashboard() {
               {showAddFacultyModal && (
                 <Modal onClose={() => setShowAddFacultyModal(false)} title="Add Faculty">
                   <div className="space-y-3">
-                    <TextField label="Name" value={facultyForm.name} onChange={v=>setFacultyForm(f=>({...f,name:v}))} />
-                    <TextField label="Email" value={facultyForm.email} onChange={v=>setFacultyForm(f=>({...f,email:v}))} />
-                    <TextField label="Employee #" value={facultyForm.employee_no} onChange={v=>setFacultyForm(f=>({...f,employee_no:v}))} />
-                    <TextField label="Department Code" value={facultyForm.department_code} onChange={v=>setFacultyForm(f=>({...f,department_code:v}))} placeholder="e.g., CCS" />
+                    <TextField label="Name" value={facultyForm.name} onChange={v => setFacultyForm(f => ({ ...f, name: v }))} />
+                    <TextField label="Email" value={facultyForm.email} onChange={v => setFacultyForm(f => ({ ...f, email: v }))} />
+                    <TextField label="Employee #" value={facultyForm.employee_no} onChange={v => setFacultyForm(f => ({ ...f, employee_no: v }))} />
+                    <TextField label="Department Code" value={facultyForm.department_code} onChange={v => setFacultyForm(f => ({ ...f, department_code: v }))} placeholder="e.g., CCS" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <TextField type="password" label="Initial Password (optional)" value={facultyForm.password} onChange={v=>setFacultyForm(f=>({...f,password:v}))} />
-                      <TextField type="password" label="Confirm Password" value={facultyForm.password_confirm} onChange={v=>setFacultyForm(f=>({...f,password_confirm:v}))} />
+                      <TextField type="password" label="Initial Password (optional)" value={facultyForm.password} onChange={v => setFacultyForm(f => ({ ...f, password: v }))} />
+                      <TextField type="password" label="Confirm Password" value={facultyForm.password_confirm} onChange={v => setFacultyForm(f => ({ ...f, password_confirm: v }))} />
                     </div>
                     <div className="flex justify-end gap-2 pt-2">
                       <button onClick={() => setShowAddFacultyModal(false)} className="h-9 px-4 bg-gray-600 text-white rounded text-sm">Cancel</button>
@@ -667,21 +665,21 @@ export default function AdminDashboard() {
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-medium text-gray-600">Department</label>
-                    <select value={studentDeptFilter} onChange={e=>setStudentDeptFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
+                    <select value={studentDeptFilter} onChange={e => setStudentDeptFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
                       <option value="">All</option>
                       {departments.map(d => <option key={d} value={d}>{d}</option>)}
                     </select>
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-medium text-gray-600">Course</label>
-                    <select value={studentCourseFilter} onChange={e=>setStudentCourseFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
+                    <select value={studentCourseFilter} onChange={e => setStudentCourseFilter(e.target.value)} className="h-9 border border-gray-300 rounded px-2 text-sm">
                       <option value="">All</option>
                       {courses.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="flex flex-col gap-1 sm:col-span-2">
                     <label className="text-xs font-medium text-gray-600">Search</label>
-                    <input value={studentSearch} onChange={e=>setStudentSearch(e.target.value)} placeholder="Search student" className="h-9 border border-gray-300 rounded px-2 text-sm" />
+                    <input value={studentSearch} onChange={e => setStudentSearch(e.target.value)} placeholder="Search student" className="h-9 border border-gray-300 rounded px-2 text-sm" />
                   </div>
                 </div>
                 <button onClick={addStudent} className="h-9 px-4 bg-blue-600 text-white rounded text-sm whitespace-nowrap">Add Student</button>
@@ -690,7 +688,7 @@ export default function AdminDashboard() {
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50">
                     <tr>
-                      {['Student #','Name','Course','Dept','Status','Actions'].map(col => <th key={col} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{col}</th>)}
+                      {['Student #', 'Name', 'Course', 'Dept', 'Status', 'Actions'].map(col => <th key={col} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{col}</th>)}
                     </tr>
                   </thead>
                   <tbody>
@@ -700,8 +698,8 @@ export default function AdminDashboard() {
                     {!loadingList && students.length === 0 && (
                       <tr><td colSpan={6} className="text-center text-gray-400 text-xs py-6">No student records</td></tr>
                     )}
-                    {!loadingList && students.slice((studentsPage-1)*studentsPageSize, (studentsPage-1)*studentsPageSize + studentsPageSize).map((s, i) => (
-                      <tr key={(s && (s.id || s.student_id || s.email)) ?? `stu-${(studentsPage-1)*studentsPageSize + i}`} className="border-t border-gray-100 hover:bg-gray-50">
+                    {!loadingList && students.slice((studentsPage - 1) * studentsPageSize, (studentsPage - 1) * studentsPageSize + studentsPageSize).map((s, i) => (
+                      <tr key={(s && (s.id || s.student_id || s.email)) ?? `stu-${(studentsPage - 1) * studentsPageSize + i}`} className="border-t border-gray-100 hover:bg-gray-50">
                         <td className="px-3 py-2 text-xs font-medium">{resolveStudentId(s) || '-'}</td>
                         <td className="px-3 py-2 text-xs">{resolveFacultyName(s) || '-'}</td>
                         <td className="px-3 py-2 text-xs">{s?.course_code || s?.course || '-'}</td>
@@ -728,18 +726,18 @@ export default function AdminDashboard() {
               {showAddStudentModal && (
                 <Modal onClose={() => setShowAddStudentModal(false)} title="Add Student">
                   <div className="space-y-3">
-                    <TextField label="Name" value={studentForm.name} onChange={v=>setStudentForm(f=>({...f,name:v}))} />
+                    <TextField label="Name" value={studentForm.name} onChange={v => setStudentForm(f => ({ ...f, name: v }))} />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <TextField label="Email" value={studentForm.email} onChange={v=>setStudentForm(f=>({...f,email:v}))} />
-                      <TextField label="Student #" value={studentForm.student_id} onChange={v=>setStudentForm(f=>({...f,student_id:v}))} />
+                      <TextField label="Email" value={studentForm.email} onChange={v => setStudentForm(f => ({ ...f, email: v }))} />
+                      <TextField label="Student #" value={studentForm.student_id} onChange={v => setStudentForm(f => ({ ...f, student_id: v }))} />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <TextField label="Department Code" value={studentForm.department_code} onChange={v=>setStudentForm(f=>({...f,department_code:v}))} placeholder="e.g., CCS" />
-                      <TextField label="Course Code" value={studentForm.course_code} onChange={v=>setStudentForm(f=>({...f,course_code:v}))} placeholder="e.g., BSIT" />
+                      <TextField label="Department Code" value={studentForm.department_code} onChange={v => setStudentForm(f => ({ ...f, department_code: v }))} placeholder="e.g., CCS" />
+                      <TextField label="Course Code" value={studentForm.course_code} onChange={v => setStudentForm(f => ({ ...f, course_code: v }))} placeholder="e.g., BSIT" />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <TextField type="password" label="Initial Password (optional)" value={studentForm.password} onChange={v=>setStudentForm(f=>({...f,password:v}))} />
-                      <TextField type="password" label="Confirm Password" value={studentForm.password_confirm} onChange={v=>setStudentForm(f=>({...f,password_confirm:v}))} />
+                      <TextField type="password" label="Initial Password (optional)" value={studentForm.password} onChange={v => setStudentForm(f => ({ ...f, password: v }))} />
+                      <TextField type="password" label="Confirm Password" value={studentForm.password_confirm} onChange={v => setStudentForm(f => ({ ...f, password_confirm: v }))} />
                     </div>
                     <div className="flex justify-end gap-2 pt-2">
                       <button onClick={() => setShowAddStudentModal(false)} className="h-9 px-4 bg-gray-600 text-white rounded text-sm">Cancel</button>
@@ -794,14 +792,14 @@ export default function AdminDashboard() {
               {!loadingList && faculty.length > 0 && (
                 <div className="flex items-center justify-between mt-3 text-xs text-gray-600">
                   <div>
-                    Showing {(facultyPage-1)*facultyPageSize + 1}-{Math.min(faculty.length, facultyPage*facultyPageSize)} of {faculty.length}
+                    Showing {(facultyPage - 1) * facultyPageSize + 1}-{Math.min(faculty.length, facultyPage * facultyPageSize)} of {faculty.length}
                   </div>
                   <div className="flex items-center gap-2">
-                    <button disabled={facultyPage===1} onClick={()=>setFacultyPage(p=>Math.max(1,p-1))} className="px-2 py-1 border rounded disabled:opacity-50">Prev</button>
+                    <button disabled={facultyPage === 1} onClick={() => setFacultyPage(p => Math.max(1, p - 1))} className="px-2 py-1 border rounded disabled:opacity-50">Prev</button>
                     <span>Page {facultyPage}</span>
-                    <button disabled={facultyPage*facultyPageSize>=faculty.length} onClick={()=>setFacultyPage(p=>p+1)} className="px-2 py-1 border rounded disabled:opacity-50">Next</button>
-                    <select value={facultyPageSize} onChange={e=>{ setFacultyPageSize(Number(e.target.value)); setFacultyPage(1); }} className="border rounded px-1 py-1">
-                      {[5,10,20,50].map(n=> <option key={n} value={n}>{n}/page</option>)}
+                    <button disabled={facultyPage * facultyPageSize >= faculty.length} onClick={() => setFacultyPage(p => p + 1)} className="px-2 py-1 border rounded disabled:opacity-50">Next</button>
+                    <select value={facultyPageSize} onChange={e => { setFacultyPageSize(Number(e.target.value)); setFacultyPage(1); }} className="border rounded px-1 py-1">
+                      {[5, 10, 20, 50].map(n => <option key={n} value={n}>{n}/page</option>)}
                     </select>
                   </div>
                 </div>
@@ -810,14 +808,14 @@ export default function AdminDashboard() {
               {!loadingList && students.length > 0 && (
                 <div className="flex items-center justify-between mt-3 text-xs text-gray-600">
                   <div>
-                    Showing {(studentsPage-1)*studentsPageSize + 1}-{Math.min(students.length, studentsPage*studentsPageSize)} of {students.length}
+                    Showing {(studentsPage - 1) * studentsPageSize + 1}-{Math.min(students.length, studentsPage * studentsPageSize)} of {students.length}
                   </div>
                   <div className="flex items-center gap-2">
-                    <button disabled={studentsPage===1} onClick={()=>setStudentsPage(p=>Math.max(1,p-1))} className="px-2 py-1 border rounded disabled:opacity-opacity-50">Prev</button>
+                    <button disabled={studentsPage === 1} onClick={() => setStudentsPage(p => Math.max(1, p - 1))} className="px-2 py-1 border rounded disabled:opacity-opacity-50">Prev</button>
                     <span>Page {studentsPage}</span>
-                    <button disabled={studentsPage*studentsPageSize>=students.length} onClick={()=>setStudentsPage(p=>p+1)} className="px-2 py-1 border rounded disabled:opacity-50">Next</button>
-                    <select value={studentsPageSize} onChange={e=>{ setStudentsPageSize(Number(e.target.value)); setStudentsPage(1); }} className="border rounded px-1 py-1">
-                      {[5,10,20,50].map(n=> <option key={n} value={n}>{n}/page</option>)}
+                    <button disabled={studentsPage * studentsPageSize >= students.length} onClick={() => setStudentsPage(p => p + 1)} className="px-2 py-1 border rounded disabled:opacity-50">Next</button>
+                    <select value={studentsPageSize} onChange={e => { setStudentsPageSize(Number(e.target.value)); setStudentsPage(1); }} className="border rounded px-1 py-1">
+                      {[5, 10, 20, 50].map(n => <option key={n} value={n}>{n}/page</option>)}
                     </select>
                   </div>
                 </div>
@@ -842,9 +840,9 @@ export default function AdminDashboard() {
                   <div className="relative">
                     <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                       {(previewUrl || profileImage) ? (
-                        <img 
+                        <img
                           src={previewUrl || profileImage}
-                          alt="Profile" 
+                          alt="Profile"
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -869,12 +867,12 @@ export default function AdminDashboard() {
                           const { data } = await api.post('/profile/me/avatar', form)
                           if (data?.avatar_url) {
                             setProfileImage(data.avatar_url)
-                            try { localStorage.setItem('adminProfileImage', data.avatar_url) } catch {}
+                            try { localStorage.setItem('adminProfileImage', data.avatar_url) } catch { }
                           }
-                        } catch {}
+                        } catch { }
                         finally {
                           // Revoke object URL after a short delay to ensure img swaps
-                          setTimeout(() => { try { URL.revokeObjectURL(tempUrl) } catch {} }, 1000)
+                          setTimeout(() => { try { URL.revokeObjectURL(tempUrl) } catch { } }, 1000)
                           setPreviewUrl(null)
                         }
                       }}
@@ -884,7 +882,7 @@ export default function AdminDashboard() {
                   <div>
                     <h3 className="text-sm font-medium text-gray-900">Profile Picture</h3>
                     <p className="text-xs text-gray-500">Click to upload a new photo</p>
-                    <button 
+                    <button
                       onClick={() => fileInputRef.current?.click()}
                       className="mt-1 text-xs text-blue-600 hover:text-blue-700"
                     >
@@ -892,33 +890,33 @@ export default function AdminDashboard() {
                     </button>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input 
-                    value="SYSTEM ADMINISTRATOR" 
-                    disabled 
-                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  <input
+                    value="SYSTEM ADMINISTRATOR"
+                    disabled
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Admin ID</label>
-                  <input 
-                    value="admin" 
-                    disabled 
-                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  <input
+                    value="admin"
+                    disabled
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                  <input 
-                    value="Administrator" 
-                    disabled 
-                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50" 
+                  <input
+                    value="Administrator"
+                    disabled
+                    className="w-full h-9 px-3 border rounded text-xs bg-gray-50"
                   />
                 </div>
                 <div className="flex gap-2 pt-4">
-                  <button 
+                  <button
                     onClick={() => {
                       alert('Profile picture saved successfully!');
                     }}
@@ -926,7 +924,7 @@ export default function AdminDashboard() {
                   >
                     Save Changes
                   </button>
-                  <button 
+                  <button
                     onClick={() => setActive('change-password')}
                     className="h-9 px-4 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
                   >
@@ -944,42 +942,42 @@ export default function AdminDashboard() {
               <div className="space-y-4 max-w-sm">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-                  <input 
+                  <input
                     type="password"
                     placeholder="Enter current password"
-                    className="w-full h-9 px-3 border rounded text-xs" 
+                    className="w-full h-9 px-3 border rounded text-xs"
                     value={pwdCurrent}
-                    onChange={e=>setPwdCurrent(e.target.value)}
+                    onChange={e => setPwdCurrent(e.target.value)}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                  <input 
+                  <input
                     type="password"
                     placeholder="Enter new password"
-                    className="w-full h-9 px-3 border rounded text-xs" 
+                    className="w-full h-9 px-3 border rounded text-xs"
                     value={pwdNew}
-                    onChange={e=>setPwdNew(e.target.value)}
+                    onChange={e => setPwdNew(e.target.value)}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-                  <input 
+                  <input
                     type="password"
                     placeholder="Confirm new password"
-                    className="w-full h-9 px-3 border rounded text-xs" 
+                    className="w-full h-9 px-3 border rounded text-xs"
                     value={pwdConfirm}
-                    onChange={e=>setPwdConfirm(e.target.value)}
+                    onChange={e => setPwdConfirm(e.target.value)}
                   />
                 </div>
                 <div className="flex gap-2 pt-4">
-                  <button 
+                  <button
                     onClick={() => setActive('profile')}
                     className="h-9 px-4 bg-gray-600 text-white rounded text-xs hover:bg-gray-700 transition-colors"
                   >
                     Cancel
                   </button>
-                  <button 
+                  <button
                     onClick={async () => {
                       try {
                         setPwdSaving(true)
@@ -1023,7 +1021,7 @@ function StatCard({ icon, label, value, color }) {
       <div className="flex items-center gap-3">
         <Icon name={icon} size={20} className={text} />
         <div>
-          <p className={`text-2xl font-bold ${text.replace('600','900')}`}>{value}</p>
+          <p className={`text-2xl font-bold ${text.replace('600', '900')}`}>{value}</p>
           <p className={`text-xs ${text}`}>{label}</p>
         </div>
       </div>
@@ -1033,11 +1031,11 @@ function StatCard({ icon, label, value, color }) {
 
 function MiniCard({ icon, label, value, color }) {
   const palette = {
-    gray: ['bg-gray-50','border-gray-200','text-gray-600','text-gray-900'],
-    orange: ['bg-orange-50','border-orange-200','text-orange-600','text-orange-900'],
-    emerald: ['bg-emerald-50','border-emerald-200','text-emerald-600','text-emerald-900']
+    gray: ['bg-gray-50', 'border-gray-200', 'text-gray-600', 'text-gray-900'],
+    orange: ['bg-orange-50', 'border-orange-200', 'text-orange-600', 'text-orange-900'],
+    emerald: ['bg-emerald-50', 'border-emerald-200', 'text-emerald-600', 'text-emerald-900']
   }
-  const [bg,border,text,textBold] = palette[color] || palette.gray
+  const [bg, border, text, textBold] = palette[color] || palette.gray
   return (
     <div className={`${bg} border ${border} rounded-lg p-4`}>
       <div className="flex items-center gap-3">
@@ -1102,12 +1100,12 @@ function SettingsTabs() {
     <div>
       <div className="flex gap-2 mb-4 flex-wrap">
         {tabs.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`h-9 px-4 rounded text-xs font-medium border ${tab===t.id ? 'bg-blue-600 text-white border-blue-600':'bg-white text-gray-600 hover:bg-gray-50 border-gray-300'}`}>{t.label}</button>
+          <button key={t.id} onClick={() => setTab(t.id)} className={`h-9 px-4 rounded text-xs font-medium border ${tab === t.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 hover:bg-gray-50 border-gray-300'}`}>{t.label}</button>
         ))}
       </div>
-  {tab === 'courses' && <SettingsCourses />}
-  {tab === 'departments' && <SettingsDepartments />}
-  {tab === 'academic' && <SettingsAcademicYears />}
+      {tab === 'courses' && <SettingsCourses />}
+      {tab === 'departments' && <SettingsDepartments />}
+      {tab === 'academic' && <SettingsAcademicYears />}
     </div>
   )
 }
@@ -1126,14 +1124,18 @@ function SettingsBlock({ title, addLabel, columns, empty }) {
 
 function SettingsCourses() {
   const [list, setList] = React.useState([])
-  React.useEffect(() => { (async()=>{ try { const { data } = await api.get('/admin/courses'); setList(Array.isArray(data)?data:[]) } catch {} })() }, [])
+  React.useEffect(() => { (async () => { try { const { data } = await api.get('/admin/courses'); setList(Array.isArray(data) ? data : []) } catch { } })() }, [])
   const add = async () => {
     const code = window.prompt('Course code (e.g., BSIT)')
     if (!code) return
     const name = window.prompt('Course name')
     if (!name) return
     const dept = window.prompt('Department code (optional)')
-    try { await api.post('/admin/courses', { code, name, department_code: dept || undefined }); alert('Course added. Refresh to see changes.'); } catch (e) { alert(e?.response?.data?.message || 'Failed to add course') }
+    try {
+      const resp = await api.post('/admin/courses', { code, name, department_code: dept || undefined })
+      const newItem = resp?.data?.data || resp?.data || { code, name, department_code: dept, status: 'Active' }
+      setList(prev => [newItem, ...prev.filter(c => c.code !== code)])
+    } catch (e) { alert(e?.response?.data?.message || 'Failed to add course') }
   }
   return (
     <div className="border border-gray-200 rounded-lg p-4 mb-6">
@@ -1144,7 +1146,7 @@ function SettingsCourses() {
       <div className="overflow-auto border border-gray-200 rounded">
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
-            <tr>{['Code','Name','Department','Status','Actions'].map(h=> <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr>
+            <tr>{['Code', 'Name', 'Department', 'Status', 'Actions'].map(h => <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr>
           </thead>
           <tbody>
             {list.map(c => (
@@ -1165,13 +1167,17 @@ function SettingsCourses() {
 
 function SettingsDepartments() {
   const [list, setList] = React.useState([])
-  React.useEffect(() => { (async()=>{ try { const { data } = await api.get('/admin/departments'); setList(Array.isArray(data)?data:[]) } catch {} })() }, [])
+  React.useEffect(() => { (async () => { try { const { data } = await api.get('/admin/departments'); setList(Array.isArray(data) ? data : []) } catch { } })() }, [])
   const add = async () => {
     const code = window.prompt('Department code (e.g., CCS)')
     if (!code) return
     const name = window.prompt('Department name')
     if (!name) return
-    try { await api.post('/admin/departments', { code, name }); alert('Department added. Refresh to see changes.'); } catch (e) { alert(e?.response?.data?.message || 'Failed to add department') }
+    try {
+      const resp = await api.post('/admin/departments', { code, name })
+      const newItem = resp?.data?.data || resp?.data || { code, name, status: 'Active' }
+      setList(prev => [newItem, ...prev.filter(d => d.code !== code)])
+    } catch (e) { alert(e?.response?.data?.message || 'Failed to add department') }
   }
   return (
     <div className="border border-gray-200 rounded-lg p-4 mb-6">
@@ -1182,7 +1188,7 @@ function SettingsDepartments() {
       <div className="overflow-auto border border-gray-200 rounded">
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
-            <tr>{['Code','Name','Status','Actions'].map(h=> <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr>
+            <tr>{['Code', 'Name', 'Status', 'Actions'].map(h => <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr>
           </thead>
           <tbody>
             {list.map(d => (
@@ -1202,11 +1208,15 @@ function SettingsDepartments() {
 
 function SettingsAcademicYears() {
   const [list, setList] = React.useState([])
-  React.useEffect(() => { (async()=>{ try { const { data } = await api.get('/admin/academic-years'); setList(Array.isArray(data)?data:[]) } catch {} })() }, [])
+  React.useEffect(() => { (async () => { try { const { data } = await api.get('/admin/academic-years'); setList(Array.isArray(data) ? data : []) } catch { } })() }, [])
   const add = async () => {
     const year = window.prompt('Academic Year (e.g., 2025-2026)')
     if (!year) return
-    try { await api.post('/admin/academic-years', { year }); alert('Academic year added. Refresh to see changes.'); } catch (e) { alert(e?.response?.data?.message || 'Failed to add academic year') }
+    try {
+      const resp = await api.post('/admin/academic-years', { year })
+      const newItem = resp?.data?.data || resp?.data || { year, status: 'Active' }
+      setList(prev => [newItem, ...prev.filter(y => y.year !== year)])
+    } catch (e) { alert(e?.response?.data?.message || 'Failed to add academic year') }
   }
   return (
     <div className="border border-gray-200 rounded-lg p-4 mb-6">
@@ -1217,7 +1227,7 @@ function SettingsAcademicYears() {
       <div className="overflow-auto border border-gray-200 rounded">
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
-            <tr>{['Year','Status','Actions'].map(h=> <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr>
+            <tr>{['Year', 'Status', 'Actions'].map(h => <th key={h} className="text-left px-3 py-2 font-medium text-gray-600 text-xs">{h}</th>)}</tr>
           </thead>
           <tbody>
             {list.map(y => (
