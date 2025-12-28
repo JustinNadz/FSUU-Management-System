@@ -10,20 +10,29 @@ class AdminSeeder extends Seeder
 {
     public function run()
     {
-        // Create admin user with simple credentials
+        // Get admin credentials from environment variables
+        $adminName = env('ADMIN_NAME', 'admin');
+        $adminEmail = env('ADMIN_EMAIL', 'admin@fsuu.edu.ph');
+        $adminPassword = env('ADMIN_PASSWORD');
+
+        if (!$adminPassword) {
+            $this->command->error('ADMIN_PASSWORD environment variable is required!');
+            $this->command->info('Add ADMIN_PASSWORD=your_password to your .env file');
+            return;
+        }
+
         User::updateOrCreate(
-            ['email' => 'admin@fsuu.edu.ph'],
+            ['email' => $adminEmail],
             [
-                'name' => 'admin',
-                'email' => 'admin@fsuu.edu.ph',
+                'name' => $adminName,
+                'email' => $adminEmail,
                 'role' => 'admin',
                 'status' => 'active',
-                'password' => Hash::make('Admin123!'),
+                'password' => Hash::make($adminPassword),
             ]
         );
 
-        echo "Admin user created/updated successfully!\n";
-        echo "Username: admin\n";
-        echo "Password: Admin123!\n";
+        $this->command->info("Admin user created/updated successfully!");
+        $this->command->info("Username: {$adminName}");
     }
 }
