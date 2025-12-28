@@ -57,20 +57,26 @@ export default function AdminDashboard() {
 
   const refreshCounts = async () => {
     try {
-      const [sRes, fRes, cRes, dRes] = await Promise.all([
-        api.get('/admin/students'),
-        api.get('/admin/faculty'),
-        api.get('/admin/courses'),
-        api.get('/admin/departments'),
+      const [sRes, fRes, cRes, dRes, aRes] = await Promise.all([
+        api.get('/admin/students').catch(() => ({ data: [] })),
+        api.get('/admin/faculty').catch(() => ({ data: [] })),
+        api.get('/admin/courses').catch(() => ({ data: [] })),
+        api.get('/admin/departments').catch(() => ({ data: [] })),
+        api.get('/admin/academic-years').catch(() => ({ data: [] })),
       ])
+      const academicYears = Array.isArray(aRes.data) ? aRes.data : []
+      const activeYear = academicYears.find(y => y.status === 'Active')?.year || academicYears[0]?.year || '2025-2026'
       setStats(prev => ({
         ...prev,
         totalStudents: extractCount(sRes.data),
         totalFaculty: extractCount(fRes.data),
         totalCourses: extractCount(cRes.data),
         totalDepartments: extractCount(dRes.data),
+        activeAcademicYear: activeYear,
       }))
-    } catch { }
+    } catch (e) {
+      console.warn('Failed to refresh dashboard counts', e)
+    }
   }
 
   useEffect(() => { refreshCounts() }, [])
@@ -420,8 +426,8 @@ export default function AdminDashboard() {
             src="/images/326319243_1186313552001605_2507428058393999247_n-removebg-preview.png"
             alt="FSUU"
             className={`${sidebarCollapsed
-                ? 'w-16 h-16'
-                : 'w-56 md:w-64'
+              ? 'w-16 h-16'
+              : 'w-56 md:w-64'
               } object-contain transition-all duration-300`}
             style={{ clipPath: 'inset(0 0 26% 0)' }}
           />
