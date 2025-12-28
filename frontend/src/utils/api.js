@@ -23,7 +23,7 @@ api.interceptors.response.use(
   err => {
     if (import.meta.env.DEV) console.warn('[API error]', err.config?.url, err.response?.status, err.response?.data)
     if (err?.response?.status === 401 || err?.response?.status === 403) {
-      try { localStorage.removeItem('auth') } catch {}
+      try { localStorage.removeItem('auth') } catch { }
       // optional: redirect to login if in browser context
       if (typeof window !== 'undefined') window.location.replace('/login')
     }
@@ -34,14 +34,20 @@ api.interceptors.response.use(
 export default api
 
 // CSRF helper for Sanctum cookie-based auth
+// For cross-domain (e.g., Vercel frontend + Render backend), CSRF cookies won't work
+// Token-based auth (Bearer token) is the primary auth method for cross-domain
 export async function ensureCsrfCookie() {
   try {
     const base = (api.defaults.baseURL || '').replace(/\/$/, '')
+    // Skip CSRF for cross-domain - token auth is used instead
+    if (base.includes('onrender.com') || base.includes('vercel.app')) {
+      return // Skip CSRF for production cross-domain setup
+    }
     const root = base.endsWith('/api') ? base.slice(0, -4) : base
     const csrfUrl = `${root}/sanctum/csrf-cookie`
     await axios.get(csrfUrl, { withCredentials: true })
   } catch (e) {
-    if (import.meta.env.DEV) console.warn('CSRF init failed', e?.response || e)
-    throw e
+    // Don't throw - CSRF is optional when using token auth
+    if (import.meta.env.DEV) console.warn('CSRF init skipped/failed (using token auth)', e?.message)
   }
 }
