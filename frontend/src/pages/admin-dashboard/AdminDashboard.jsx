@@ -79,7 +79,12 @@ export default function AdminDashboard() {
     }
   }
 
-  useEffect(() => { refreshCounts() }, [])
+  // Refresh counts when dashboard is shown
+  useEffect(() => {
+    if (active === 'dashboard') {
+      refreshCounts()
+    }
+  }, [active])
 
   // State for filters / search
   const [facultyDeptFilter, setFacultyDeptFilter] = useState('')
