@@ -1,31 +1,14 @@
 import api, { ensureCsrfCookie } from './api'
 
-const DEMO_CREDENTIALS = {
-  // Student Account
-  student: {
-    studentNumber: '23100000758',
-    password: 'anna123',
-    role: 'student'
-  },
-  // Teacher Account
-  teacher: {
-    teacherId: 'T-001',
-    password: 'juan123',
-    role: 'teacher'
-  },
-  // Admin Account
-  admin: {
-    adminId: 'admin',
-    password: 'admin123',
-    role: 'admin'
-  }
-}
+// Authentication is handled by the Laravel backend
+// No demo credentials stored in frontend code
+
 
 export async function signIn(identifier, password) {
   try {
     const id = (identifier || '').trim()
     const pwd = (password || '').trim()
-    
+
     // Try API login first
     const payload = id.includes('@') ? { email: id, password: pwd } : { username: id, password: pwd }
     // Initialize CSRF cookie for Sanctum when using proxy
@@ -80,7 +63,7 @@ export async function signOut() {
   try {
     const stored = JSON.parse(localStorage.getItem('auth') || 'null')
     if (stored?.token) await api.post('/logout')
-  } catch {}
+  } catch { }
   localStorage.removeItem('auth')
 }
 
@@ -101,6 +84,6 @@ export function getUser() {
   }
 }
 
-export function getRole() { 
-  return getUser()?.role || null 
+export function getRole() {
+  return getUser()?.role || null
 }
