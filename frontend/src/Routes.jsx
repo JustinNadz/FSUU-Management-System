@@ -4,7 +4,6 @@ import ProtectedRoute from './components/ProtectedRoute'
 import ScrollToTop from './components/ScrollToTop'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './pages/not-found'
-import DesignSystemOverviewDashboard from './pages/design-system-overview-dashboard'
 import AdminDashboard from './pages/admin-dashboard'
 import Login from './pages/login'
 import ResetPassword from './pages/reset-password'
@@ -36,7 +35,6 @@ export default function Routes() {
           <Route path="/teacher-dashboard/:section" element={<ProtectedRoute><TeacherDashboard /></ProtectedRoute>} />
           <Route path="/teacher-dashboards" element={<ProtectedRoute><TeacherDashboard /></ProtectedRoute>} />
           <Route path="/teacher-dashboards/:section" element={<ProtectedRoute><TeacherDashboard /></ProtectedRoute>} />
-          <Route path="/design-system-overview-dashboard" element={<DesignSystemOverviewDashboard />} />
           <Route path="*" element={<NotFound />} />
         </RouterRoutes>
       </ErrorBoundary>
